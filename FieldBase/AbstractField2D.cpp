@@ -5,7 +5,6 @@
 #include "AbstractField2D.h"
 
 
-
 template <typename T>
 AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D &field) const
 {

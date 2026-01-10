@@ -8,7 +8,9 @@
 #include "../NumericalConstants.h"
 #pragma once
 #include <limits>
-#include "cmath"
+#include <cmath>
+#include <ostream>
+
 namespace vfMath
 {
     template <typename T>
@@ -18,10 +20,12 @@ namespace vfMath
         T x{};
         T y{};
 
-        Vector2D() = default;                // ✅ REQUIRED
-        Vector2D(T x, T y) : x(x), y(y) {}
+        Vector2D() = default; // ✅ REQUIRED
+        Vector2D(T x, T y) : x(x), y(y)
+        {
+        }
 
-        T length() const                     // ✅ const-correct
+        T length() const // ✅ const-correct
         {
             return std::sqrt(x * x + y * y);
         }
@@ -29,14 +33,22 @@ namespace vfMath
         void normalize()
         {
             T len = length();
-            if (len > std::numeric_limits<T>::epsilon())   // ✅ template-safe
+            if (len > std::numeric_limits<T>::epsilon()) // ✅ template-safe
             {
                 x /= len;
                 y /= len;
             }
         }
     };
-}
 
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Vector2D<T>& m)
+{
+    os << "{" << "x: " << m.x << ", y: " << m.y << "} ";
+
+
+    return os;
+}
+}
 
 #endif //VECTOR2D_H

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "VectorFields/VectorField2D.h"
+#include "ScalarFields/ScalarField2D.h"
 #include "FieldBase/AbstractField2D.h"
 #include "Vectors/Vector2D.h"
 
@@ -8,11 +9,16 @@ using namespace vfMath;
 int main()
 {
 
-    VectorField2D<Vector2D<double>> field(10, 10);
+    ScalarField2D<double> scalar_field(10, 10);
+    scalar_field.fill([](double x, double y) {
+        return std::sin(x * 2 * 3.14159) * std::cos(y * 2 * 3.14159);
+    }, true);
 
-    field.setValue( 3, 4, Vector2D(1.0, 2.0) );
+    std::cout << scalar_field << std::endl;
 
-    std::cout << "Vector at (3,4): (" << field.getValue(3,1).x << ", " << field.getValue(3,1).y << ")\n";
+    VectorField2D<double> vector_field(scalar_field);
+
+    std::cout << vector_field << std::endl;
 
     return 0;
 }
