@@ -39,6 +39,12 @@ namespace vfMath
                 y /= len;
             }
         }
+
+        Vector2D operator+(const Vector2D& other) const
+        {
+            return Vector2D(x + other.x, y + other.y);
+        }
+
     };
 
 template <typename T>
