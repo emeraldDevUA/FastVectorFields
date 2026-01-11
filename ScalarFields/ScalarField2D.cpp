@@ -5,7 +5,6 @@
 #include "ScalarField2D.h"
 
 
-
 // template <typename T>
 // vfMath::Vector2D<T> ScalarField2D<T>::gradient(const T x, const T y, T epsilon) const
 // {

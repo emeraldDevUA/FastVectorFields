@@ -45,16 +45,30 @@ namespace vfMath
             return Vector2D(x + other.x, y + other.y);
         }
 
+        Vector2D operator-(const Vector2D& other) const
+        {
+            return Vector2D(x - other.x, y - other.y);
+        }
+
+        Vector2D operator*(const T multiplier) const
+        {
+            return Vector2D(multiplier * x, multiplier * y);
+        }
+
+        Vector2D operator/(const T divisor) const
+        {
+            return Vector2D(x / divisor, y / divisor);
+        }
     };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const Vector2D<T>& m)
-{
-    os << "{" << "x: " << m.x << ", y: " << m.y << "} ";
+    template <typename T>
+    std::ostream& operator<<(std::ostream& os, const Vector2D<T>& m)
+    {
+        os << "{" << "x: " << m.x << ", y: " << m.y << "} ";
 
 
-    return os;
-}
+        return os;
+    }
 }
 
 #endif //VECTOR2D_H

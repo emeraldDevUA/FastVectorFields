@@ -38,7 +38,6 @@ public:
         {
             for (size_t j = 0; j < y_local; ++j)
             {
-
                 double x_coord = x0 + i * delta_x;
                 double y_coord = y0 + j * delta_y;
 

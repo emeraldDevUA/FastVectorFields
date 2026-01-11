@@ -7,9 +7,9 @@
 #include "../Vectors/Vector2D.h"
 
 using namespace vfMath;
+
 int main()
 {
-
     // ScalarField2D<double> scalar_field(20, 20);
     // scalar_field.fill([](double x, double y) {
     //     const double r = std::sqrt(x * x + y * y);
@@ -26,4 +26,3 @@ int main()
 
     return 0;
 }
-
