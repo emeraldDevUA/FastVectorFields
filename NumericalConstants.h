@@ -7,9 +7,8 @@
 
 #include <limits>
 
-constexpr float  FLOAT_EPSILON  = std::numeric_limits<float>::min();
+constexpr float FLOAT_EPSILON = std::numeric_limits<float>::min();
 constexpr double DOUBLE_EPSILON = std::numeric_limits<double>::min();
-
 
 
 #endif //NUMERICALCONSTANTS_H

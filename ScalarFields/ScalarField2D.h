@@ -50,6 +50,7 @@ public:
 
     Vector2D<T> gradient(T x, T y, T epsilon) const
     {
+        // other derivative type
         double dx = (this->getValue(x + epsilon, y) - this->getValue(x - epsilon, y)) / (2.0 * epsilon);
         double dy = (this->getValue(x, y + epsilon) - this->getValue(x, y - epsilon)) / (2.0 * epsilon);
 
