@@ -20,10 +20,10 @@ namespace vfMath
         T x{};
         T y{};
 
-        Vector2D() = default; // ✅ REQUIRED
+        Vector2D() = default;
+
         Vector2D(T x, T y) : x(x), y(y)
-        {
-        }
+        {}
 
         T length() const // ✅ const-correct
         {
@@ -59,13 +59,13 @@ namespace vfMath
         {
             return Vector2D(x / divisor, y / divisor);
         }
+
     };
 
     template <typename T>
     std::ostream& operator<<(std::ostream& os, const Vector2D<T>& m)
     {
         os << "{" << "x: " << m.x << ", y: " << m.y << "} ";
-
 
         return os;
     }

@@ -15,22 +15,21 @@ class AbstractField2D
 {
 protected:
     std::vector<T> inner_data;
-
-public:
     size_t x_size;
     size_t y_size;
 
+public:
     explicit AbstractField2D(const size_t grid_size)
-        : x_size(grid_size),
-          y_size(grid_size),
-          inner_data(grid_size * grid_size)
+        : inner_data(grid_size * grid_size),
+          x_size(grid_size),
+          y_size(grid_size)
     {
     }
 
     AbstractField2D(size_t x_size, const size_t y_size)
-        : x_size(x_size),
-          y_size(y_size),
-          inner_data(x_size * y_size)
+        : inner_data(x_size * y_size),
+          x_size(x_size),
+          y_size(y_size)
     {
     }
 
@@ -39,13 +38,6 @@ public:
     {
         inner_data[x * y_size + y] = value;
     }
-
-
-    T getValue(const size_t x, const size_t y)
-    {
-        return inner_data[x * y_size + y];
-    }
-
 
     T getValue(const size_t x, const size_t y) const
     {
@@ -63,9 +55,6 @@ public:
     AbstractField2D operator-(const AbstractField2D& field) const;
 
 
-    // I will replace them with (double x, double y) version later
-    //virtual T sample(double x, double y, double offset_x, double offset_y) const;
-    //virtual T sample(double x, double y) const;
 };
 
 template <typename T>
@@ -102,8 +91,8 @@ T AbstractField2D<T>::operator()(double x, double y) const
     const auto ix = static_cast<size_t>(std::floor(x));
     const auto iy = static_cast<size_t>(std::floor(y));
 
-    size_t ix1 = std::min(ix + 1, this->x_size - 1);
-    size_t iy1 = std::min(iy + 1, this->y_size - 1);
+    const size_t ix1 = std::min(ix + 1, this->x_size - 1);
+    const size_t iy1 = std::min(iy + 1, this->y_size - 1);
 
     const double fx = x - ix;
     const double fy = y - iy;

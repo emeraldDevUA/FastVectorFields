@@ -33,7 +33,6 @@ public:
         T delta_x = (x1 - x0) / static_cast<T>(x_local);
         T delta_y = (y1 - y0) / static_cast<T>(y_local);
 
-
         for (size_t i = 0; i < x_local; ++i)
         {
             for (size_t j = 0; j < y_local; ++j)

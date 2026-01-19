@@ -11,19 +11,29 @@ using namespace vfMath;
 int main()
 {
     ScalarField2D<double> scalar_field(20, 20);
-    scalar_field.fill([](double x, double y) {
-        double r = std::sqrt(x * x + y * y);
-        double theta = std::atan2(y, x);
-        return std::sin(6.0 * theta) * std::exp(-r);
+
+    scalar_field.fill([](double x, double y)
+    {
+        return std::sin(8 * M_PI * x) * std::sin(8 * M_PI * y);
     }, -1.0, 1.0, -1.0, 1.0);
 
     std::cout << scalar_field << std::endl;
 
     VectorField2D<double> vector_field(scalar_field);
-
+    vector_field.normalize();
     std::ofstream file("data.txt");
 
-    file << vector_field;
+    //file << vector_field;
+
+    for (int i = 0; i < 20; ++i)
+    {
+        for (int j = 0; j < 20; ++j)
+        {
+            double div = vector_field.curl(i, j);
+            std::cout << div << " ";
+        }
+        std::cout << std::endl;
+    }
 
 
     return 0;
