@@ -7,6 +7,9 @@
 
 #include "../FieldBase/AbstractField2D.h"
 #include "../ScalarFields/ScalarField2D.h"
+#include  "../Vectors/Vector3D.h"
+
+using vfMath::Vector3D;
 
 template <typename T>
 class VectorField2D : public AbstractField2D<Vector2D<T>>
@@ -43,8 +46,8 @@ public:
 
         //assume that u(i, j) is this(i, j).x and v(i, j) is this(i, j).y
 
-        T dudx = (this->getValue(i+1, j).x - this->getValue(i-1, j).x) / (2.0 * eps);
-        T dvdy = (this->getValue(i, j+1).y - this->getValue(i, j-1).y) / (2.0 * eps);
+        T dudx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
+        T dvdy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
 
         return dudx + dvdy;
     }
@@ -52,21 +55,32 @@ public:
 
     T curl(size_t i, size_t j, T eps = 10e-6) const
     {
-
         // For 2D vector field (u, v), curl = dv/dx - du/dy
-        T dvdx = (this->getValue(i+1, j).y - this->getValue(i-1, j).y) / (2.0 * eps);
-        T dudy = (this->getValue(i, j+1).x - this->getValue(i, j-1).x) / (2.0 * eps);
+        T dvdx = (this->getValue(i + 1, j).y - this->getValue(i - 1, j).y) / (2.0 * eps);
+        T dudy = (this->getValue(i, j + 1).x - this->getValue(i, j - 1).x) / (2.0 * eps);
 
         // Return as Vector2D with curl value in z-component represented as x, y=0
         // Or if you want the scalar curl, consider changing return type to T
         return dvdx - dudy;
     }
 
-    template <typename InterpolationMethod>
-    void fillWithInterpolation(InterpolationMethod method)
+
+    void fillWithInterpolation()
     {
+        T epsilon = 10e-6;
+        std::vector<Vector3D<T>> referencePoints{};
 
-
+        for (size_t i = 0; i < this->getGridSizeX(); ++i)
+        {
+            for (size_t j = 0; j < this->getGridSizeY(); ++j)
+            {
+                if (this->getValue(i, j).length() < epsilon)
+                {
+                    T value = this->getValue(i, j).length(); // compute angle instead
+                    referencePoints.push_back(Vector3D<T>(i, value, j));
+                }
+            }
+        }
     }
 
     void normalize()

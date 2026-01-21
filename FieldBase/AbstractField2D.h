@@ -53,8 +53,6 @@ public:
 
     AbstractField2D operator+(const AbstractField2D& field) const;
     AbstractField2D operator-(const AbstractField2D& field) const;
-
-
 };
 
 template <typename T>
