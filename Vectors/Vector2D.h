@@ -60,15 +60,20 @@ namespace vfMath
         {
             return Vector2D(x / divisor, y / divisor);
         }
+
+        T dot(const Vector2D& other) const
+        {
+            return x * other.x + y * other.y;
+        }
     };
 
     template <typename T>
     std::ostream& operator<<(std::ostream& os, const Vector2D<T>& vector)
     {
         os << "{"
-        <<   "x: " << vector.x
-        << ", y: " << vector.y
-        << "} ";
+            << "x: " << vector.x
+            << ", y: " << vector.y
+            << "} ";
 
         return os;
     }

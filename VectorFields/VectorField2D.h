@@ -8,6 +8,8 @@
 #include "../FieldBase/AbstractField2D.h"
 #include "../ScalarFields/ScalarField2D.h"
 #include  "../Vectors/Vector3D.h"
+#include "../Interpolation/Interpolation.h"
+
 
 using vfMath::Vector3D;
 
@@ -70,15 +72,26 @@ public:
         T epsilon = 10e-6;
         std::vector<Vector3D<T>> referencePoints{};
 
+        Vector2D<T> xAxis(1.0, 0);
         for (size_t i = 0; i < this->getGridSizeX(); ++i)
         {
             for (size_t j = 0; j < this->getGridSizeY(); ++j)
             {
-                if (this->getValue(i, j).length() < epsilon)
+                if (this->getValue(i, j).length() > epsilon)
                 {
-                    T value = this->getValue(i, j).length(); // compute angle instead
+                    T value = this->getValue(i, j).dot(xAxis);
                     referencePoints.push_back(Vector3D<T>(i, value, j));
                 }
+            }
+        }
+
+        for (size_t i = 0; i < this->getGridSizeX(); ++i)
+        {
+            for (size_t j = 0; j < this->getGridSizeY(); ++j)
+            {
+                Vector2D<T> P0(static_cast<T>(i), static_cast<T>(j));
+                T interpolatedValue = Interpolation<T>().lagrangeInterpolation3D(P0, referencePoints);
+                this->setValue(i, j, vfMath::Vector2D<T>(interpolatedValue, interpolatedValue));
             }
         }
     }

@@ -14,10 +14,10 @@ namespace vfMath
 
     class Vector3D
     {
+    public:
         T x{};
         T y{};
         T z{};
-
         Vector3D() = default;
 
         Vector3D(T x, T y, T z) : x(x), y(y), z(z)
@@ -58,18 +58,11 @@ namespace vfMath
         {
             return Vector3D(x / divisor, y / divisor, z / divisor);
         }
+
+        T dot(const Vector3D& other) const
+        {
+            return x * other.x + y * other.y + z * other.z;
+        }
     };
-
-    template <typename T>
-    std::ostream& operator<<(std::ostream& os, const Vector3D<T>& vector)
-    {
-        os << "{"
-            <<   "x: " << vector.x
-            << ", y: " << vector.y
-            << ", z: " << vector.z
-            << "} ";
-
-        return os;
-    }
 }
 #endif //FASTVECTORFIELDS_VECTOR3D_H
