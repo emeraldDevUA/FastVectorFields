@@ -7,6 +7,8 @@
 #include "../Vectors/Vector2D.h"
 #include  "../Vectors/Vector3D.h"
 
+#include  "../Interpolation/RBFInterpolator2D.h"
+
 using namespace vfMath;
 
 int main()
@@ -37,15 +39,20 @@ int main()
     }
 
 
-    VectorField2D<double> new_vector_field_2d(4, 4);
+    size_t vector_field_size = 20;
+    VectorField2D<double> new_vector_field_2d(vector_field_size, vector_field_size);
 
-    new_vector_field_2d.setValue(1, 1, Vector2D(-1.0, 0.0));
-    new_vector_field_2d.setValue(3, 3, Vector2D(0.0, 1.0));
+    size_t cx = vector_field_size / 2;
+    size_t cy = vector_field_size / 2;
+
+    new_vector_field_2d.setValue(cx, cy-5, {1.0, 0.0});   // right
+    new_vector_field_2d.setValue(cx+5, cy, {0.0, 1.0});   // up
+    new_vector_field_2d.setValue(cx, cy+5, {-1.0, 0.0});  // left
+    new_vector_field_2d.setValue(cx-5, cy, {0.0, -1.0});  // down
 
     new_vector_field_2d.fillWithInterpolation();
-
-    std::cout << new_vector_field_2d << std::endl;
-
+    new_vector_field_2d.normalize();
+    file << new_vector_field_2d;
 
     return 0;
 }

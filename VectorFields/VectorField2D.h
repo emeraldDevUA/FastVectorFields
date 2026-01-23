@@ -8,7 +8,7 @@
 #include "../FieldBase/AbstractField2D.h"
 #include "../ScalarFields/ScalarField2D.h"
 #include  "../Vectors/Vector3D.h"
-#include "../Interpolation/Interpolation.h"
+#include  "../Interpolation/RBFInterpolator2D.h"
 
 
 using vfMath::Vector3D;
@@ -69,32 +69,49 @@ public:
 
     void fillWithInterpolation()
     {
-        T epsilon = 10e-6;
-        std::vector<Vector3D<T>> referencePoints{};
+        T threshold = 1e-6;
 
-        Vector2D<T> xAxis(1.0, 0);
+        std::vector<Vector3D<T>> refCos;
+        std::vector<Vector3D<T>> refSin;
+
         for (size_t i = 0; i < this->getGridSizeX(); ++i)
         {
             for (size_t j = 0; j < this->getGridSizeY(); ++j)
             {
-                if (this->getValue(i, j).length() > epsilon)
+                auto v = this->getValue(i, j);
+                if (v.length() > threshold)
                 {
-                    T value = this->getValue(i, j).dot(xAxis);
-                    referencePoints.push_back(Vector3D<T>(i, value, j));
+                    refCos.push_back({(T)i, v.x, (T)j});
+                    refSin.push_back({(T)i, v.y, (T)j});
                 }
             }
         }
 
+        if (refCos.size() < 3) return;
+
+        T epsilon = 0.8;
+
+        RBFInterpolator2D<T> rbfCos(refCos, epsilon);
+        RBFInterpolator2D<T> rbfSin(refSin, epsilon);
+
         for (size_t i = 0; i < this->getGridSizeX(); ++i)
         {
             for (size_t j = 0; j < this->getGridSizeY(); ++j)
             {
-                Vector2D<T> P0(static_cast<T>(i), static_cast<T>(j));
-                T interpolatedValue = Interpolation<T>().lagrangeInterpolation3D(P0, referencePoints);
-                this->setValue(i, j, vfMath::Vector2D<T>(interpolatedValue, interpolatedValue));
+                T cosVal = rbfCos.evaluate((T)i, (T)j);
+                T sinVal = rbfSin.evaluate((T)i, (T)j);
+
+                T len = std::sqrt(cosVal*cosVal + sinVal*sinVal);
+                if (len > threshold) {
+                    cosVal /= len;
+                    sinVal /= len;
+                }
+
+                this->setValue(i, j, Vector2D<T>(cosVal, sinVal));
             }
         }
     }
+
 
     void normalize()
     {
