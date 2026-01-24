@@ -42,13 +42,11 @@ int main()
     size_t vector_field_size = 20;
     VectorField2D<double> new_vector_field_2d(vector_field_size, vector_field_size);
 
-    size_t cx = vector_field_size / 2;
-    size_t cy = vector_field_size / 2;
+    new_vector_field_2d.setValue(10, 0, {0.0, 1.0});
+    new_vector_field_2d.setValue(10, 19, {0.0, -1.0});
+    new_vector_field_2d.setValue(0, 10, {1.0, 0.0});
+    new_vector_field_2d.setValue(19, 10, {-1.0, 0.0});
 
-    new_vector_field_2d.setValue(cx, cy-5, {1.0, 0.0});   // right
-    new_vector_field_2d.setValue(cx+5, cy, {0.0, 1.0});   // up
-    new_vector_field_2d.setValue(cx, cy+5, {-1.0, 0.0});  // left
-    new_vector_field_2d.setValue(cx-5, cy, {0.0, -1.0});  // down
 
     new_vector_field_2d.fillWithInterpolation();
     new_vector_field_2d.normalize();

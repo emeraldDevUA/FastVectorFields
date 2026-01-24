@@ -36,6 +36,7 @@ namespace vfMath
             {
                 x /= len;
                 y /= len;
+                z /= len;
             }
         }
 

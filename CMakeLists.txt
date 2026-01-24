@@ -52,7 +52,8 @@ add_executable(UnitTests tests/VectorTest.cpp
         Vectors/Vector3D.cpp
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
-        Interpolation/RBFInterpolator2D.h)
+        Interpolation/RBFInterpolator2D.h
+        tests/VectorFieldTest.cpp)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 
 # 5. Integrate with CTest/IDE Test Explorers
