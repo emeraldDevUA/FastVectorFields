@@ -101,8 +101,9 @@ public:
                 T cosVal = rbfCos.evaluate((T)i, (T)j);
                 T sinVal = rbfSin.evaluate((T)i, (T)j);
 
-                T len = std::sqrt(cosVal*cosVal + sinVal*sinVal);
-                if (len > threshold) {
+                T len = std::sqrt(cosVal * cosVal + sinVal * sinVal);
+                if (len > threshold)
+                {
                     cosVal /= len;
                     sinVal /= len;
                 }
@@ -123,6 +124,38 @@ public:
                     this->getValue(i, j).normalize();
             }
         }
+    }
+
+    VectorField2D operator+(const VectorField2D& field) const
+    {
+        VectorField2D newField(this->x_size, this->y_size);
+        // Assuming both fields have the same dimensions
+        for (size_t i = 0; i < this->x_size; i++)
+        {
+            for (size_t j = 0; j < this->y_size; ++j)
+            {
+                newField.setValue(i, j, this->getValue(i, j) + field.getValue(i, j));
+            }
+        }
+
+        return newField;
+    }
+
+    VectorField2D<T> operator-(const VectorField2D& field) const
+    {
+        VectorField2D newField(this->x_size, this->y_size);
+        // Assuming both fields have the same dimensions
+        for (size_t i = 0; i < this->x_size; i++)
+        {
+            Vector2D<T> difference;
+            for (size_t j = 0; j < this->y_size; ++j)
+            {
+                difference = this->getValue(i, j) - field.getValue(i, j);
+                newField.setValue(i, j, difference);
+            }
+        }
+
+        return newField;
     }
 };
 

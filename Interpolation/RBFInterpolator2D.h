@@ -5,13 +5,15 @@
 #ifndef FASTVECTORFIELDS_RBFINTERPOLATOR2D_H
 #define FASTVECTORFIELDS_RBFINTERPOLATOR2D_H
 
+#include "../Vectors/Vector3D.h"
+
 #include <vector>
 #include <cmath>
 #include <cassert>
-#include "../Vectors/Vector3D.h"
 
-template<typename T>
-class RBFInterpolator2D {
+template <typename T>
+class RBFInterpolator2D
+{
 public:
     using Vec3 = vfMath::Vector3D<T>;
 
@@ -21,9 +23,11 @@ public:
         computeWeights();
     }
 
-    T evaluate(T x, T z) const {
+    T evaluate(T x, T z) const
+    {
         T result = 0;
-        for (size_t i = 0; i < pts.size(); ++i) {
+        for (size_t i = 0; i < pts.size(); ++i)
+        {
             T r = distance2D(x, z, pts[i].x, pts[i].z);
             result += weights[i] * phi(r);
         }
@@ -36,17 +40,20 @@ private:
     T eps;
 
     // Gaussian RBF kernel
-    T phi(T r) const {
-    return 1.0 / std::sqrt(r*r + eps*eps);
+    T phi(T r) const
+    {
+        return 1.0 / std::sqrt(r * r + eps * eps);
     }
 
-    static T distance2D(T x1, T z1, T x2, T z2) {
+    static T distance2D(T x1, T z1, T x2, T z2)
+    {
         T dx = x1 - x2;
         T dz = z1 - z2;
         return std::sqrt(dx * dx + dz * dz);
     }
 
-    void computeWeights() {
+    void computeWeights()
+    {
         size_t N = pts.size();
         weights.resize(N);
 
@@ -54,9 +61,11 @@ private:
         std::vector<T> b(N);
 
         // Build system A * w = b
-        for (size_t i = 0; i < N; ++i) {
+        for (size_t i = 0; i < N; ++i)
+        {
             b[i] = pts[i].y;
-            for (size_t j = 0; j < N; ++j) {
+            for (size_t j = 0; j < N; ++j)
+            {
                 T r = distance2D(pts[i].x, pts[i].z, pts[j].x, pts[j].z);
                 A[i][j] = phi(r);
             }
@@ -73,7 +82,8 @@ private:
     {
         const size_t N = b.size();
 
-        for (size_t i = 0; i < N; ++i) {
+        for (size_t i = 0; i < N; ++i)
+        {
             // Pivot
             T pivot = A[i][i];
             assert(std::abs(pivot) > 1e-12);
@@ -83,7 +93,8 @@ private:
             b[i] /= pivot;
 
             // Eliminate
-            for (size_t k = 0; k < N; ++k) {
+            for (size_t k = 0; k < N; ++k)
+            {
                 if (k == i) continue;
                 T factor = A[k][i];
                 for (size_t j = i; j < N; ++j)

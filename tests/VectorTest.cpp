@@ -39,9 +39,7 @@ TEST_CASE("Vector2D Basic Operations", "[vector]")
         REQUIRE(result.x == 5.0);
         REQUIRE(result.y == 10.0);
     }
-
 }
-
 
 
 TEST_CASE("Vector3D Basic Operations", "[vector]")
@@ -75,6 +73,4 @@ TEST_CASE("Vector3D Basic Operations", "[vector]")
         REQUIRE(result.y == 10.0);
         REQUIRE(result.z == 15.0);
     }
-
 }
-
