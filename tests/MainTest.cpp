@@ -50,7 +50,17 @@ int main()
 
     new_vector_field_2d.fillWithInterpolation();
     new_vector_field_2d.normalize();
-    file << new_vector_field_2d;
+    //file << new_vector_field_2d;
 
+    VectorField2D<double> a(16, 16);
+
+    a.setValue(0, 0, {1.0, 0.0});
+    a.setValue(3, 3, {-1.0, 0});
+    a.setValue(1, 1, {0.5, -0.5});
+
+    a.fillWithInterpolation();
+    std::cout << a << std::endl;
+
+    file << a;
     return 0;
 }

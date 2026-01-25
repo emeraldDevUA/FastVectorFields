@@ -60,9 +60,19 @@ namespace vfMath
             return Vector3D(x / divisor, y / divisor, z / divisor);
         }
 
+        bool operator==(const Vector3D& other) const
+        {
+            return x == other.x && y == other.y && z == other.z;
+        }
+
         T dot(const Vector3D& other) const
         {
             return x * other.x + y * other.y + z * other.z;
+        }
+
+        friend Vector3D operator*(T scalar, const Vector3D& v)
+        {
+            return {v.x * scalar, v.y * scalar, v.z * scalar};
         }
     };
 }

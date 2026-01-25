@@ -75,7 +75,7 @@ private:
     }
 
     // Gaussian elimination (small systems, good enough for terrain/fields)
-    static void solveLinearSystem(
+    void solveLinearSystem(
         std::vector<std::vector<T>>& A,
         std::vector<T>& b,
         std::vector<T>& x)

@@ -51,4 +51,56 @@ TEST_CASE("VectorField Operations", "[vector]")
         REQUIRE(result.getValue(0, 2).y == 0.0);
     }
 
+    SECTION("Addition works correctly")
+    {
+        VectorField2D<double> a(3, 3);
+        VectorField2D<double> b(3, 3);
+
+        a.setValue(0, 2, {1.0, 2.0});
+        b.setValue(0, 2, {3.0, -2.0});
+
+        auto result = a - b;
+
+        REQUIRE(result.getValue(0, 2).x == -2.0);
+        REQUIRE(result.getValue(0, 2).y == 4.0);
+    }
+
+
+    SECTION("Interpolated sampling works correctly")
+    {
+        VectorField2D<double> a(3, 3);
+
+        a.setValue(0, 0, {1.0, 1.0});
+        a.setValue(1, 1, {-1.0, -1.0});
+
+        auto result = a(0.5, 0.5);
+        REQUIRE(result == Vector2D<double>(0.0, 0.0));
+    }
+
+
+    SECTION("Interpolated sampling works correctly")
+    {
+        VectorField2D<double> a(16, 16);
+
+        a.setValue(0, 0, {1.0, 0.0});
+        a.setValue(3, 3, {-1.0, 0});
+        a.setValue(1, 1, {0.5, -0.5});
+
+        a.fillWithInterpolation();
+        std::cout << a << std::endl;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            for (int j = 0; j < 4; ++j)
+            {
+                auto v = a.getValue(i, j);
+                REQUIRE(v.x <= 1.0);
+                REQUIRE(v.x >= -1.0);
+                REQUIRE(v.y <= 1.0);
+                REQUIRE(v.y >= -1.0);
+            }
+        }
+
+    }
+
 }

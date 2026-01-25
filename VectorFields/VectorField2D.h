@@ -141,7 +141,7 @@ public:
         return newField;
     }
 
-    VectorField2D<T> operator-(const VectorField2D& field) const
+    VectorField2D operator-(const VectorField2D& field) const
     {
         VectorField2D newField(this->x_size, this->y_size);
         // Assuming both fields have the same dimensions

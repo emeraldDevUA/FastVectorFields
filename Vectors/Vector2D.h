@@ -61,9 +61,19 @@ namespace vfMath
             return Vector2D(x / divisor, y / divisor);
         }
 
+        bool operator==(const Vector2D& other) const
+        {
+            return x == other.x && y == other.y;
+        }
+
         T dot(const Vector2D& other) const
         {
             return x * other.x + y * other.y;
+        }
+
+        friend Vector2D operator*(T scalar, const Vector2D& v)
+        {
+            return {v.x * scalar, v.y * scalar};
         }
     };
 
