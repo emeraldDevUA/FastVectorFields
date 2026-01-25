@@ -100,7 +100,5 @@ TEST_CASE("VectorField Operations", "[vector]")
                 REQUIRE(v.y >= -1.0);
             }
         }
-
     }
-
 }

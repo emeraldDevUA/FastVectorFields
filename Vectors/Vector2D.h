@@ -6,7 +6,7 @@
 #define VECTOR2D_H
 
 #include "../NumericalConstants.h"
-#pragma once
+
 #include <limits>
 #include <cmath>
 #include <ostream>

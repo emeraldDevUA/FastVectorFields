@@ -17,7 +17,7 @@ class RBFInterpolator2D
 public:
     using Vec3 = vfMath::Vector3D<T>;
 
-    RBFInterpolator2D(const std::vector<Vec3>& points, T epsilon)
+    RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon)
         : pts(points), eps(epsilon)
     {
         computeWeights();
