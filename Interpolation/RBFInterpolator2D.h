@@ -39,7 +39,7 @@ private:
     std::vector<T> weights;
     T eps;
 
-    // Gaussian RBF kernel
+    // Inverse Multiquadric RBF kernel
     T phi(T r) const
     {
         return 1.0 / std::sqrt(r * r + eps * eps);

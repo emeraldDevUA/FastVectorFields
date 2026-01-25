@@ -63,7 +63,9 @@ namespace vfMath
 
         bool operator==(const Vector2D& other) const
         {
-            return x == other.x && y == other.y;
+            auto epsilon = std::numeric_limits<T>::epsilon();
+            return std::abs(x - other.x) < epsilon
+                && std::abs(y - other.y) < epsilon;
         }
 
         T dot(const Vector2D& other) const

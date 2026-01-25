@@ -53,7 +53,7 @@ public:
     }
 
 
-    T curl(size_t i, size_t j, T eps = 10e-6) const
+    T curl(size_t i, size_t j, T eps = 1e-6) const
     {
         // For 2D vector field (u, v), curl = dv/dx - du/dy
         T dv_dx = (this->getValue(i + 1, j).y - this->getValue(i - 1, j).y) / (2.0 * eps);
