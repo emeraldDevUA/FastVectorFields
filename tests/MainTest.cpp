@@ -5,6 +5,9 @@
 #include "../ScalarFields/ScalarField2D.h"
 #include "../FieldBase/AbstractField2D.h"
 #include "../Vectors/Vector2D.h"
+#include  "../Vectors/Vector3D.h"
+
+#include  "../Interpolation/RBFInterpolator2D.h"
 
 using namespace vfMath;
 
@@ -36,5 +39,28 @@ int main()
     }
 
 
+    size_t vector_field_size = 20;
+    VectorField2D<double> new_vector_field_2d(vector_field_size, vector_field_size);
+
+    new_vector_field_2d.setValue(10, 0, {0.0, 1.0});
+    new_vector_field_2d.setValue(10, 19, {0.0, -1.0});
+    new_vector_field_2d.setValue(0, 10, {1.0, 0.0});
+    new_vector_field_2d.setValue(19, 10, {-1.0, 0.0});
+
+
+    new_vector_field_2d.fillWithInterpolation();
+    new_vector_field_2d.normalize();
+    //file << new_vector_field_2d;
+
+    VectorField2D<double> a(16, 16);
+
+    a.setValue(0, 0, {1.0, 0.0});
+    a.setValue(3, 3, {-1.0, 0});
+    a.setValue(1, 1, {0.5, -0.5});
+
+    a.fillWithInterpolation();
+    std::cout << a << std::endl;
+
+    file << a;
     return 0;
 }

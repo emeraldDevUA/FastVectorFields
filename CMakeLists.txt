@@ -15,12 +15,20 @@ add_library(FastVectorLib
         ScalarFields/ScalarField2D.cpp
         ScalarFields/ScalarField2D.h
         NumericalConstants.h
+        Vectors/Vector3D.cpp
+        Vectors/Vector3D.h
+        Interpolation/RBFInterpolator2D.cpp
+        Interpolation/RBFInterpolator2D.h
 )
 
 # 2. Create your main application
 # Only include main.cpp here. Link the library for the rest.
 add_executable(FastVectorFields tests/MainTest.cpp
-        )
+        Vectors/Vector3D.cpp
+        Vectors/Vector3D.h
+        Interpolation/RBFInterpolator2D.cpp
+        Interpolation/RBFInterpolator2D.h
+)
 target_link_libraries(FastVectorFields PRIVATE FastVectorLib)
 
 # ---------------------------------------------------------
@@ -40,7 +48,12 @@ FetchContent_MakeAvailable(Catch2)
 enable_testing()
 
 # Create the test executable (Ensure tests/test_main.cpp exists!)
-add_executable(UnitTests tests/VectorTest.cpp)
+add_executable(UnitTests tests/VectorTest.cpp
+        Vectors/Vector3D.cpp
+        Vectors/Vector3D.h
+        Interpolation/RBFInterpolator2D.cpp
+        Interpolation/RBFInterpolator2D.h
+        tests/VectorFieldTest.cpp)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 
 # 5. Integrate with CTest/IDE Test Explorers

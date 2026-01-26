@@ -6,7 +6,7 @@
 #define VECTOR2D_H
 
 #include "../NumericalConstants.h"
-#pragma once
+
 #include <limits>
 #include <cmath>
 #include <ostream>
@@ -23,7 +23,8 @@ namespace vfMath
         Vector2D() = default;
 
         Vector2D(T x, T y) : x(x), y(y)
-        {}
+        {
+        }
 
         T length() const // ✅ const-correct
         {
@@ -60,12 +61,31 @@ namespace vfMath
             return Vector2D(x / divisor, y / divisor);
         }
 
+        bool operator==(const Vector2D& other) const
+        {
+            auto epsilon = std::numeric_limits<T>::epsilon();
+            return std::abs(x - other.x) < epsilon
+                && std::abs(y - other.y) < epsilon;
+        }
+
+        T dot(const Vector2D& other) const
+        {
+            return x * other.x + y * other.y;
+        }
+
+        friend Vector2D operator*(T scalar, const Vector2D& v)
+        {
+            return {v.x * scalar, v.y * scalar};
+        }
     };
 
     template <typename T>
-    std::ostream& operator<<(std::ostream& os, const Vector2D<T>& m)
+    std::ostream& operator<<(std::ostream& os, const Vector2D<T>& vector)
     {
-        os << "{" << "x: " << m.x << ", y: " << m.y << "} ";
+        os << "{"
+            << "x: " << vector.x
+            << ", y: " << vector.y
+            << "} ";
 
         return os;
     }
