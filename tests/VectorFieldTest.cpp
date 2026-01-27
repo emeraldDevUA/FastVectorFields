@@ -87,7 +87,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         a.setValue(1, 1, {0.5, -0.5});
 
         a.fillWithInterpolation();
-        std::cout << a << std::endl;
+
 
         for (int i = 0; i < 4; ++i)
         {
@@ -100,5 +100,22 @@ TEST_CASE("VectorField Operations", "[vector]")
                 REQUIRE(v.y >= -1.0);
             }
         }
+    }
+
+    SECTION("Serialization test") {
+        std::stringstream ss;
+
+        {
+            cereal::JSONOutputArchive oarchive(ss);
+            oarchive(cereal::make_nvp("vector_field", vector_field_2d_1));
+        }
+
+        VectorField2D<double> loaded(3, 3);
+        {
+            cereal::JSONInputArchive iarchive(ss);
+            iarchive(cereal::make_nvp("vector_field", loaded));
+        }
+
+        REQUIRE(loaded == vector_field_2d_1);
     }
 }
