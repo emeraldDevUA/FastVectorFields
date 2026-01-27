@@ -11,6 +11,10 @@
 #include <cmath>
 #include <ostream>
 
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/xml.hpp>
+
 namespace vfMath
 {
     template <typename T>
@@ -76,6 +80,15 @@ namespace vfMath
         friend Vector2D operator*(T scalar, const Vector2D& v)
         {
             return {v.x * scalar, v.y * scalar};
+        }
+
+        template <class Archive>
+        void serialize(Archive& archive)
+        {
+            archive(
+                cereal::make_nvp("x", x),
+                cereal::make_nvp("y", y)
+            );
         }
     };
 

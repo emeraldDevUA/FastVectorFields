@@ -9,6 +9,8 @@
 
 #include  "../Interpolation/RBFInterpolator2D.h"
 
+#include <cereal/types/memory.hpp>
+
 using namespace vfMath;
 
 int main()
@@ -62,5 +64,10 @@ int main()
     std::cout << a << std::endl;
 
     file << a;
+
+    std::ofstream os("out.json", std::ios::binary);
+    cereal::JSONOutputArchive archive( os );
+
+    archive(cereal::make_nvp<>("vector_field", a));
     return 0;
 }

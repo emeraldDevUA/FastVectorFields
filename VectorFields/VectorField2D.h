@@ -12,6 +12,7 @@
 using vfMath::Vector3D;
 
 template <typename T>
+
 class VectorField2D : public AbstractField2D<Vector2D<T>>
 {
 public:
@@ -156,6 +157,7 @@ public:
 
         return newField;
     }
+
 };
 
 #endif //VECTORFIELD2D_H

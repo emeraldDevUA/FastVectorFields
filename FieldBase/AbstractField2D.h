@@ -9,6 +9,8 @@
 #include <ostream>
 #include <cmath>
 
+#include <cereal/types/vector.hpp>
+
 template <typename T>
 
 class AbstractField2D
@@ -53,6 +55,17 @@ public:
 
     AbstractField2D operator+(const AbstractField2D& field) const;
     AbstractField2D operator-(const AbstractField2D& field) const;
+
+    template <class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("x_size", this->x_size),
+            cereal::make_nvp("y_size",  this->y_size),
+            cereal::make_nvp("inner_data",  this->inner_data)
+        );
+    }
+
 };
 
 template <typename T>

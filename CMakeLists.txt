@@ -29,6 +29,11 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
 )
+
+target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
+target_include_directories(FastVectorLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
+
+
 target_link_libraries(FastVectorFields PRIVATE FastVectorLib)
 
 # ---------------------------------------------------------
