@@ -4,6 +4,4 @@
 
 #include "Vector2D.h"
 
-namespace vfMath
-{
-} // vfMath
+namespace vfMath{}

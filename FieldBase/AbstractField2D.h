@@ -9,6 +9,8 @@
 #include <ostream>
 #include <cmath>
 
+#include <cereal/types/vector.hpp>
+
 template <typename T>
 
 class AbstractField2D
@@ -50,9 +52,40 @@ public:
 
     T operator()(double x, double y) const;
 
+    bool operator==(const AbstractField2D& field) const
+    {
+        if (!(this->x_size == field.x_size&&this->y_size == field.y_size))
+        {
+            return false;
+        }
+
+        for (size_t x = 0; x < this->x_size; ++x)
+        {
+            for (size_t y = 0; y < this->y_size; ++y)
+            {
+                if (!(this->getValue(x, y) == field.getValue(x, y)))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     AbstractField2D operator+(const AbstractField2D& field) const;
     AbstractField2D operator-(const AbstractField2D& field) const;
+
+    template <class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("x_size", this->x_size),
+            cereal::make_nvp("y_size",  this->y_size),
+            cereal::make_nvp("inner_data",  this->inner_data)
+        );
+    }
+
 };
 
 template <typename T>
@@ -83,7 +116,6 @@ std::ostream& operator<<(std::ostream& os, const AbstractField2D<T>& m)
 
 
 template <typename T>
-
 T AbstractField2D<T>::operator()(double x, double y) const
 {
     const auto ix = static_cast<size_t>(std::floor(x));
@@ -105,4 +137,5 @@ T AbstractField2D<T>::operator()(double x, double y) const
         fx * fy * v11 +
         (1 - fx) * fy * v01;
 }
+
 #endif //ABSTRACTFIELD_H
