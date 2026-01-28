@@ -77,6 +77,22 @@ TEST_CASE("VectorField Operations", "[vector]")
         REQUIRE(result == Vector2D<double>(0.0, 0.0));
     }
 
+    SECTION("Comparison test")
+    {
+        VectorField2D<double> a(3, 3);
+
+        a.setValue(0, 0, {1.0, 1.0});
+        a.setValue(1, 1, {-1.0, -1.0});
+
+        VectorField2D<double> b(3, 3);
+
+        b.setValue(0, 0, {1.0, 1.0});
+        b.setValue(1, 1, {-1.0, -1.0});
+
+        REQUIRE(a != vector_field_2d_2);
+        REQUIRE(a == b);
+    }
+
 
     SECTION("Interpolated sampling works correctly")
     {
