@@ -12,6 +12,7 @@
 using vfMath::Vector3D;
 
 template <typename T>
+
 class VectorField2D : public AbstractField2D<Vector2D<T>>
 {
 public:
@@ -37,10 +38,8 @@ public:
         }
     }
 
-    T divergence(size_t i, size_t j) const
+    T divergence(size_t i, size_t j, T eps = 1e-6) const
     {
-        const T eps = 1e-6;
-
         // Assuming your class provides access to u(i,j) and v(i,j)
         // You might need to adapt these if your storage is different
 
@@ -156,6 +155,7 @@ public:
 
         return newField;
     }
+
 };
 
 #endif //VECTORFIELD2D_H

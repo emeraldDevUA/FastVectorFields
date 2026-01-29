@@ -8,6 +8,10 @@
 #include <cmath>
 #include <ostream>
 
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/xml.hpp>
+
 namespace vfMath
 {
     template <typename T>
@@ -77,6 +81,30 @@ namespace vfMath
         {
             return {v.x * scalar, v.y * scalar, v.z * scalar};
         }
+
+        template <class Archive>
+        void serialize(Archive& archive)
+        {
+            archive(
+                cereal::make_nvp("x", x),
+                cereal::make_nvp("y", y),
+                cereal::make_nvp("z", z)
+            );
+        }
     };
-}
+
+    template <typename T>
+    std::ostream& operator<<(std::ostream& os, const Vector3D<T>& vector)
+    {
+        os << "{"
+            << "x: " << vector.x
+            << ", y: " << vector.y
+            << ", z: " << vector.z
+            << "} ";
+
+        return os;
+    }
+};
+
+
 #endif //FASTVECTORFIELDS_VECTOR3D_H

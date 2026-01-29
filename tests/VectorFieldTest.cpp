@@ -77,6 +77,22 @@ TEST_CASE("VectorField Operations", "[vector]")
         REQUIRE(result == Vector2D<double>(0.0, 0.0));
     }
 
+    SECTION("Comparison test")
+    {
+        VectorField2D<double> a(3, 3);
+
+        a.setValue(0, 0, {1.0, 1.0});
+        a.setValue(1, 1, {-1.0, -1.0});
+
+        VectorField2D<double> b(3, 3);
+
+        b.setValue(0, 0, {1.0, 1.0});
+        b.setValue(1, 1, {-1.0, -1.0});
+
+        REQUIRE(a != vector_field_2d_2);
+        REQUIRE(a == b);
+    }
+
 
     SECTION("Interpolated sampling works correctly")
     {
@@ -87,7 +103,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         a.setValue(1, 1, {0.5, -0.5});
 
         a.fillWithInterpolation();
-        std::cout << a << std::endl;
+
 
         for (int i = 0; i < 4; ++i)
         {
@@ -100,5 +116,22 @@ TEST_CASE("VectorField Operations", "[vector]")
                 REQUIRE(v.y >= -1.0);
             }
         }
+    }
+
+    SECTION("Serialization test") {
+        std::stringstream ss;
+
+        {
+            cereal::JSONOutputArchive oarchive(ss);
+            oarchive(cereal::make_nvp("vector_field", vector_field_2d_1));
+        }
+
+        VectorField2D<double> loaded(3, 3);
+        {
+            cereal::JSONInputArchive iarchive(ss);
+            iarchive(cereal::make_nvp("vector_field", loaded));
+        }
+
+        REQUIRE(loaded == vector_field_2d_1);
     }
 }

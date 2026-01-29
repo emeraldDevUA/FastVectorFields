@@ -29,6 +29,11 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
 )
+
+target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
+target_include_directories(FastVectorLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
+
+
 target_link_libraries(FastVectorFields PRIVATE FastVectorLib)
 
 # ---------------------------------------------------------
@@ -55,6 +60,7 @@ add_executable(UnitTests tests/VectorTest.cpp
         Interpolation/RBFInterpolator2D.h
         tests/VectorFieldTest.cpp)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
+target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 
 # 5. Integrate with CTest/IDE Test Explorers
 include(Catch)
