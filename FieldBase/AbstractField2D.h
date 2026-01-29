@@ -124,8 +124,8 @@ T AbstractField2D<T>::operator()(double x, double y) const
     const size_t ix1 = std::min(ix + 1, this->x_size - 1);
     const size_t iy1 = std::min(iy + 1, this->y_size - 1);
 
-    const double fx = x - ix;
-    const double fy = y - iy;
+    const double fx = x - static_cast<double>(ix);
+    const double fy = y - static_cast<double>(iy);
 
     T v00 = getValue(ix, iy);
     T v10 = getValue(ix1, iy);
