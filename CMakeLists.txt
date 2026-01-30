@@ -19,6 +19,8 @@ add_library(FastVectorLib
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
+        ComputationModels/AbstractComputationModel.cpp
+        ComputationModels/AbstractComputationModel.h
 )
 
 # 2. Create your main application
@@ -28,6 +30,8 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
+        ComputationModels/AbstractComputationModel.cpp
+        ComputationModels/AbstractComputationModel.h
 )
 
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
@@ -58,7 +62,9 @@ add_executable(UnitTests tests/VectorTest.cpp
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
-        tests/VectorFieldTest.cpp)
+        tests/VectorFieldTest.cpp
+        ComputationModels/AbstractComputationModel.cpp
+        ComputationModels/AbstractComputationModel.h)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 

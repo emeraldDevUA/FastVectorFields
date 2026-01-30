@@ -4,7 +4,6 @@
 
 #ifndef ABSTRACTFIELD_H
 #define ABSTRACTFIELD_H
-#include <iosfwd>
 #include <vector>
 #include <ostream>
 #include <cmath>

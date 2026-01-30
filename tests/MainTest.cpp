@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 #include "../VectorFields/VectorField2D.h"
 #include "../ScalarFields/ScalarField2D.h"
@@ -13,17 +14,19 @@
 
 using namespace vfMath;
 
+#define m_PI 3.14159265358979323846
 
 
 int main()
 {
-    ScalarField2D<double> scalar_field(100, 100);
+    ScalarField2D<double> scalar_field(128, 128);
 
     scalar_field.fill([](double x, double y)
     {
-         double r = std::sqrt(x*x + y*y);
-         double theta = std::atan2(y, x);
-         return std::sin(8 * M_PI * r + 4 * theta);
+         const double r = std::sqrt(x*x + y*y);
+         const double theta = std::atan2(y, x);
+
+         return std::sin(8 * m_PI * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0);
 
     // std::cout << scalar_field << std::endl;
@@ -76,13 +79,18 @@ int main()
     std::ofstream os1("scalar_field.json", std::ios::binary);
     cereal::JSONOutputArchive archive1(os1);
 
-   archive1(cereal::make_nvp<>("scalar_field", scalar_field));
+    archive1(cereal::make_nvp<>("scalar_field", scalar_field));
 
+    VectorField2D vortex(
+        20, 20,
+        [](double x, double y) { return  x; },
+        [](double x, double y) { return  y; },
+        -1.0, 1.0, -1.0, 1.0
+    );
 
     std::ofstream os("vector_field.json", std::ios::binary);
     cereal::JSONOutputArchive archive(os);
-    archive(cereal::make_nvp<>("vector_field", vector_field));
-
+    archive(cereal::make_nvp<>("vector_field", vortex));
 
     return 0;
 }

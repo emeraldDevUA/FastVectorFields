@@ -21,10 +21,40 @@ public:
     {
     }
 
-    VectorField2D(size_t x_size, size_t y_size)
+    explicit VectorField2D(size_t x_size, size_t y_size)
         : AbstractField2D<Vector2D<T>>(x_size, y_size)
     {
     }
+
+    template <typename PxFunc, typename PyFunc>
+    explicit VectorField2D(
+        size_t x_size,
+        size_t y_size,
+        PxFunc&& Px,
+        PyFunc&& Py,
+        T x0, T x1,
+        T y0, T y1
+    )
+        : AbstractField2D<Vector2D<T>>(x_size, y_size)
+    {
+        const T delta_x = (x1 - x0) / static_cast<T>(x_size);
+        const T delta_y = (y1 - y0) / static_cast<T>(y_size);
+
+        for (size_t i = 0; i < x_size; ++i)
+        {
+            for (size_t j = 0; j < y_size; ++j)
+            {
+                const T x = x0 + i * delta_x;
+                const T y = y0 + j * delta_y;
+
+                this->setValue(i, j, Vector2D<T>{
+                    Px(x, y),
+                    Py(x, y)
+                });
+            }
+        }
+    }
+
 
     explicit VectorField2D(const ScalarField2D<T>& field)
         : AbstractField2D<Vector2D<T>>(field.getGridSizeX(), field.getGridSizeY())
