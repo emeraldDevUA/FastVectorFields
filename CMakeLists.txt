@@ -67,7 +67,8 @@ add_executable(UnitTests tests/VectorTest.cpp
         tests/VectorFieldTest.cpp
         ComputationModels/AbstractComputationModel.cpp
         ComputationModels/AbstractComputationModel.h
-        ComputationModels/MultiThreadedComputationModel.h)
+        ComputationModels/MultiThreadedComputationModel.h
+        tests/MultiThreadedTest.cpp)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 

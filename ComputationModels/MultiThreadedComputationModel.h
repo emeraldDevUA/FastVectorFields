@@ -5,7 +5,7 @@
 #ifndef FASTVECTORFIELDS_MULTITHREADEDCOMPUTATIONMODEL_H
 #define FASTVECTORFIELDS_MULTITHREADEDCOMPUTATIONMODEL_H
 #include "AbstractComputationModel.h"
-
+#include "../VectorFields/VectorField2D.h"
 #include <thread>
 
 using std::jthread;
@@ -38,9 +38,10 @@ public:
 
         size_t y_start = 0;
 
+        #pragma omp parallel for
         for (int t = 0; t < thread_count; ++t)
         {
-            size_t y_end = y_start + rows_per_thread + (t < remainder ? 1 : 0);
+            size_t y_end = y_start + rows_per_thread + (t < remainder ? 1 : 0   );
 
             workers.emplace_back(
                 [&, y_start, y_end]()
@@ -64,7 +65,7 @@ public:
         return result; // jthread joins automatically
     }
 
-    template <typename Func>
+template <typename Func>
 VectorField2D<T> compute(
     Func func,
     const VectorField2D<T>& field1,
@@ -96,7 +97,7 @@ VectorField2D<T> compute(
                         {
                             result.setValue(
                                 i, j,
-                                func(i, j, field1, field2)
+                                field1.getValue(i, j) + field2.getValue(i, j)
                             );
                         }
                     }
