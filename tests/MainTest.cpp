@@ -88,6 +88,8 @@ int main()
         -1.0, 1.0, -1.0, 1.0
     );
 
+    vortex.normalize();
+
     std::ofstream os("vector_field.json", std::ios::binary);
     cereal::JSONOutputArchive archive(os);
     archive(cereal::make_nvp<>("vector_field", vortex));

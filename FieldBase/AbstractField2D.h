@@ -53,7 +53,7 @@ public:
 
     bool operator==(const AbstractField2D& field) const
     {
-        if (!(this->x_size == field.x_size&&this->y_size == field.y_size))
+        if (!(this->x_size == field.x_size && this->y_size == field.y_size))
         {
             return false;
         }
@@ -80,11 +80,10 @@ public:
     {
         archive(
             cereal::make_nvp("x_size", this->x_size),
-            cereal::make_nvp("y_size",  this->y_size),
-            cereal::make_nvp("inner_data",  this->inner_data)
+            cereal::make_nvp("y_size", this->y_size),
+            cereal::make_nvp("inner_data", this->inner_data)
         );
     }
-
 };
 
 template <typename T>
