@@ -10,5 +10,10 @@
 constexpr float FLOAT_EPSILON = std::numeric_limits<float>::min();
 constexpr double DOUBLE_EPSILON = std::numeric_limits<double>::min();
 
+template <typename T>
+inline T get_epsilon()
+{
+    return std::numeric_limits<T>::min();
+}
 
 #endif //NUMERICALCONSTANTS_H
