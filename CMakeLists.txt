@@ -19,6 +19,8 @@ add_library(FastVectorLib
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
+        FieldBase/AbstractField3D.cpp
+        FieldBase/AbstractField3D.h
 )
 
 # 2. Create your main application
@@ -28,6 +30,8 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
+        FieldBase/AbstractField3D.cpp
+        FieldBase/AbstractField3D.h
 )
 
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
@@ -58,9 +62,19 @@ add_executable(UnitTests tests/VectorTest.cpp
         Vectors/Vector3D.h
         Interpolation/RBFInterpolator2D.cpp
         Interpolation/RBFInterpolator2D.h
-        tests/VectorFieldTest.cpp)
+        tests/VectorFieldTest.cpp
+        FieldBase/AbstractField3D.cpp
+        FieldBase/AbstractField3D.h)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
+
+if (MSVC)
+    target_compile_options(UnitTests PRIVATE /O2)
+    target_compile_options(FastVectorLib PRIVATE /O2)
+else()
+    target_compile_options(UnitTests PRIVATE -O3 -march=native)
+    target_compile_options(FastVectorLib PRIVATE -O3 -march=native)
+endif()
 
 # 5. Integrate with CTest/IDE Test Explorers
 include(Catch)

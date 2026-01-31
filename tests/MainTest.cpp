@@ -14,16 +14,15 @@
 using namespace vfMath;
 
 
-
 int main()
 {
-    ScalarField2D<double> scalar_field(100, 100);
+    ScalarField2D<double> scalar_field(1000, 1000);
 
     scalar_field.fill([](double x, double y)
     {
-         double r = std::sqrt(x*x + y*y);
-         double theta = std::atan2(y, x);
-         return std::sin(8 * M_PI * r + 4 * theta);
+        double r = std::sqrt(x * x + y * y);
+        double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0);
 
     // std::cout << scalar_field << std::endl;
@@ -76,7 +75,7 @@ int main()
     std::ofstream os1("scalar_field.json", std::ios::binary);
     cereal::JSONOutputArchive archive1(os1);
 
-   archive1(cereal::make_nvp<>("scalar_field", scalar_field));
+    archive1(cereal::make_nvp<>("scalar_field", scalar_field));
 
 
     std::ofstream os("vector_field.json", std::ios::binary);

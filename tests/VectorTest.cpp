@@ -42,7 +42,8 @@ TEST_CASE("Vector2D Basic Operations", "[vector]")
         REQUIRE(result.y == 10.0);
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {
@@ -59,7 +60,6 @@ TEST_CASE("Vector2D Basic Operations", "[vector]")
         REQUIRE(loaded.x == v1.x);
         REQUIRE(loaded.y == v1.y);
     }
-
 }
 
 TEST_CASE("Vector3D Basic Operations", "[vector]")
@@ -94,7 +94,8 @@ TEST_CASE("Vector3D Basic Operations", "[vector]")
         REQUIRE(result.z == 15.0);
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {

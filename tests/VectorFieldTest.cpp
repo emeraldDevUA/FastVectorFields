@@ -118,7 +118,8 @@ TEST_CASE("VectorField Operations", "[vector]")
         }
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {

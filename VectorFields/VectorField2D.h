@@ -38,6 +38,35 @@ public:
         }
     }
 
+    template <typename PxFunc, typename PyFunc>
+    explicit VectorField2D(
+        size_t x_size,
+        size_t y_size,
+        PxFunc&& Px,
+        PyFunc&& Py,
+        T x0, T x1,
+        T y0, T y1
+    )
+        : AbstractField2D<Vector2D<T>>(x_size, y_size)
+    {
+        const T delta_x = (x1 - x0) / static_cast<T>(x_size);
+        const T delta_y = (y1 - y0) / static_cast<T>(y_size);
+
+        for (size_t i = 0; i < x_size; ++i)
+        {
+            for (size_t j = 0; j < y_size; ++j)
+            {
+                const T x = x0 + i * delta_x;
+                const T y = y0 + j * delta_y;
+
+                this->setValue(i, j, Vector2D<T>{
+                                   Px(x, y),
+                                   Py(x, y)
+                               });
+            }
+        }
+    }
+
     T divergence(size_t i, size_t j, T eps = 1e-6) const
     {
         // Assuming your class provides access to u(i,j) and v(i,j)
@@ -155,7 +184,6 @@ public:
 
         return newField;
     }
-
 };
 
 #endif //VECTORFIELD2D_H

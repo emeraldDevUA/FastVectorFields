@@ -4,4 +4,6 @@
 
 #include "Vector3D.h"
 
-namespace vfMath{}
+namespace vfMath
+{
+}
