@@ -35,8 +35,8 @@ compute_single_threaded(
 TEST_CASE("MultiThreadedComputationModel is faster than single-threaded [+]",
           "[multithread]")
 {
-    constexpr size_t N = 2000;
-    constexpr size_t M = 2000;
+    constexpr size_t N = 3000;
+    constexpr size_t M = 3000;
 
     auto field_1 = make_field(N, M, 1.0);
     auto field_2 = make_field(N, M, 2.0);

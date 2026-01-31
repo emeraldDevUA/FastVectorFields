@@ -3,6 +3,8 @@ project(FastVectorFields)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(OpenMP REQUIRED)
+
 # 1. Create a library for your logic (All files EXCEPT main.cpp)
 # This allows both your app and your tests to use these classes.
 add_library(FastVectorLib
@@ -39,8 +41,15 @@ add_executable(FastVectorFields tests/MainTest.cpp
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 target_include_directories(FastVectorLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 
+target_link_libraries(FastVectorLib PUBLIC OpenMP::OpenMP_CXX)
 
 target_link_libraries(FastVectorFields PRIVATE FastVectorLib)
+
+if (MSVC)
+    target_compile_options(FastVectorLib PRIVATE /O2)
+else()
+    target_compile_options(FastVectorLib PRIVATE -O3 -march=native)
+endif()
 
 # ---------------------------------------------------------
 # 3. Add Catch2 Testing Framework
@@ -72,6 +81,12 @@ add_executable(UnitTests tests/VectorTest.cpp
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 
+
+if (MSVC)
+    target_compile_options(UnitTests PRIVATE /O2)
+else()
+    target_compile_options(UnitTests PRIVATE -O3 -march=native)
+endif()
 # 5. Integrate with CTest/IDE Test Explorers
 include(Catch)
 catch_discover_tests(UnitTests)

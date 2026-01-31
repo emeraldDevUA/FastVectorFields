@@ -15,11 +15,12 @@ template <typename T>
 class AbstractField2D
 {
 protected:
-    std::vector<T> inner_data;
+
     size_t x_size;
     size_t y_size;
 
 public:
+    std::vector<T> inner_data;
     explicit AbstractField2D(const size_t grid_size)
         : inner_data(grid_size * grid_size),
           x_size(grid_size),
@@ -50,6 +51,10 @@ public:
     size_t getGridSizeY() const;
 
     T operator()(double x, double y) const;
+
+    T operator()(int x, int y) const;
+
+    T operator()(int x) const;
 
     bool operator==(const AbstractField2D& field) const
     {
@@ -114,7 +119,7 @@ std::ostream& operator<<(std::ostream& os, const AbstractField2D<T>& m)
 
 
 template <typename T>
-T AbstractField2D<T>::operator()(double x, double y) const
+T AbstractField2D<T>::operator()(const double x, const double y) const
 {
     const auto ix = static_cast<size_t>(std::floor(x));
     const auto iy = static_cast<size_t>(std::floor(y));
@@ -135,5 +140,18 @@ T AbstractField2D<T>::operator()(double x, double y) const
         fx * fy * v11 +
         (1 - fx) * fy * v01;
 }
+
+template <typename T>
+T AbstractField2D<T>::operator()(const int x, const int y) const
+{
+    return this->inner_data[x * y_size + y];
+};
+
+template <typename T>
+T AbstractField2D<T>::operator()(const int x) const
+{
+    return this->inner_data[x];
+};
+
 
 #endif //ABSTRACTFIELD_H
