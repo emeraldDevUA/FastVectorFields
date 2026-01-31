@@ -15,6 +15,7 @@
 
 using vfMath::Vector2D;
 using vfMath::Vector3D;
+using vfFields::VectorField2D;
 
 
 TEST_CASE("VectorField Operations", "[vector]")
