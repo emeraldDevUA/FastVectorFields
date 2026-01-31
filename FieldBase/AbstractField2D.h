@@ -118,7 +118,7 @@ namespace vfFields
 
 
     template <typename T>
-    T AbstractField2D<T>::operator()(double x, double y) const
+    T AbstractField2D<T>::operator()(const double x, const double y) const
     {
         const auto ix = static_cast<size_t>(std::floor(x));
         const auto iy = static_cast<size_t>(std::floor(y));

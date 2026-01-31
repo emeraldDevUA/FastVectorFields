@@ -86,12 +86,11 @@ The FastVectorFields library supports interpolation in two different contexts:
 - Interpolation sampling
 
 Uses bilinear or trilinear interpolation to sample between the tiles.
+
 ```cpp
 VectorField2D<double> a(3, 3);
-
 a.setValue(0, 0, {1.0, 1.0});
 a.setValue(1, 1, {-1.0, -1.0});
-
 auto result = a(0.5, 0.5);
  ```
 
@@ -102,12 +101,17 @@ Use case: getting additional samples between the tiles.
 Uses RBF-interpolation to fill the data structure with approximated vectors.
 ```cpp
 VectorField2D<double> a(16, 16);
-
 a.setValue(0, 0, {1.0, 0.0});
 a.setValue(3, 3, {-1.0, 0});
 a.setValue(1, 1, {0.5, -0.5});
-
 a.fillWithInterpolation();
 ```
 Use case: filling in the gaps between the vectors(at least 3).
+
+The purpose of this method is to produce vector fields similar to this one based on a limited number of entries.
+
+
+| Field type                   | Input (Initial Vectors)                                                                   | Output (Complete Vector field)                                                            |
+|------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| **Graphical representation** | <img src="https://i.imgur.com/UDPPSFy.png" alt="https://imgur.com/a/szF2nss" width="768"> | <img src="https://i.imgur.com/WzAtzrL.png" alt="https://imgur.com/a/szF2nss" width="768"> |
 

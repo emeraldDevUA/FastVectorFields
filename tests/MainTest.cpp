@@ -13,6 +13,14 @@ using vfMath::Vector2D;
 using vfFields::VectorField2D;
 using vfFields::ScalarField2D;
 
+void serialize(const auto& scalar_field, const std::string& file_name, const std::string& type)
+{
+    std::ofstream os1(file_name + ".json", std::ios::binary);
+    cereal::JSONOutputArchive archive1(os1);
+
+    archive1(cereal::make_nvp<>(type, scalar_field));
+}
+
 int main()
 {
     ScalarField2D<double> scalar_field(32, 32);
@@ -27,14 +35,27 @@ int main()
     VectorField2D vector_field(scalar_field);
     vector_field.normalize();
 
-    std::ofstream os1("scalar_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive1(os1);
+    serialize(scalar_field, "scalar_field", "scalar_field");
 
-    archive1(cereal::make_nvp<>("scalar_field", scalar_field));
 
-    std::ofstream os("vector_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive(os);
-    archive(cereal::make_nvp<>("vector_field", vector_field));
+    serialize(vector_field, "vector_field", "vector_field");
+
+
+    VectorField2D<double> interpolation_target(32, 32);
+
+    interpolation_target.setValue(0, 0, {1.0, 0.0});
+    interpolation_target.setValue(31, 31, {-1.0, 0});
+    interpolation_target.setValue(20, 17, {0.5, -0.5});
+
+    interpolation_target.setValue(13, 12, {-0.5, 0.5});
+
+    interpolation_target.normalize();
+
+    serialize(interpolation_target, "vector_field_poles", "vector_field");
+
+    interpolation_target.fillWithInterpolation();
+
+    serialize(interpolation_target, "vector_field_interpolation", "vector_field");
 
 
     return 0;
