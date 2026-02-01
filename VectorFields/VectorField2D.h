@@ -87,8 +87,8 @@ namespace vfFields
         T curl(size_t i, size_t j, T eps = 1e-6) const
         {
             // For 2D vector field (u, v), curl = dv/dx - du/dy
-            T dv_dx = (this->getValue(i + 1, j).y - this->getValue(i - 1, j).y) / (2.0 * eps);
-            T du_dy = (this->getValue(i, j + 1).x - this->getValue(i, j - 1).x) / (2.0 * eps);
+            T dv_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
+            T du_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
 
             // Return as Vector2D with curl value in z-component represented as x, y=0
             // Or if you want the scalar curl, consider changing return type to T
@@ -140,13 +140,10 @@ namespace vfFields
 
         void normalize()
         {
-            for (size_t i = 0; i < this->getGridSizeX(); ++i)
+            const size_t full_size = this->getGridSizeX() * this->getGridSizeY();
+            for (size_t i = 0; i < full_size; ++i)
             {
-                for (size_t j = 0; j < this->getGridSizeY(); ++j)
-                {
-                    if (this->getValue(i, j).length() > 10e-6)
-                        this->getValue(i, j).normalize();
-                }
+                this->inner_data[i].normalize();
             }
         }
 

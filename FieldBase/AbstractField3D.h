@@ -67,18 +67,13 @@ namespace vfFields
             {
                 return false;
             }
+            const size_t full_size = this->x_size * this->y_size * this->z_size;
 
-            for (size_t x = 0; x < this->x_size; ++x)
+            for (size_t i = 0; i < full_size; ++i)
             {
-                for (size_t y = 0; y < this->y_size; ++y)
+                if (this->inner_data[i] != field.inner_data[i])
                 {
-                    for (size_t z = 0; z < this->z_size; ++z)
-                    {
-                        if (!(this->getValue(x, y, z) == field.getValue(x, y, z)))
-                        {
-                            return false;
-                        }
-                    }
+                    return false;
                 }
             }
 

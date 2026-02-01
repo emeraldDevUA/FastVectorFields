@@ -23,7 +23,7 @@ void serialize(const auto& scalar_field, const std::string& file_name, const std
 
 int main()
 {
-    ScalarField2D<double> scalar_field(32, 32);
+    ScalarField2D<double> scalar_field(512, 512);
 
     scalar_field.fill([](const double x, const double y)
     {
@@ -37,16 +37,13 @@ int main()
 
     serialize(scalar_field, "scalar_field", "scalar_field");
 
-
     serialize(vector_field, "vector_field", "vector_field");
-
 
     VectorField2D<double> interpolation_target(32, 32);
 
     interpolation_target.setValue(0, 0, {1.0, 0.0});
     interpolation_target.setValue(31, 31, {-1.0, 0});
     interpolation_target.setValue(20, 17, {0.5, -0.5});
-
     interpolation_target.setValue(13, 12, {-0.5, 0.5});
 
     interpolation_target.normalize();

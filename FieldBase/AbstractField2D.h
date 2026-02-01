@@ -62,14 +62,12 @@ namespace vfFields
                 return false;
             }
 
-            for (size_t x = 0; x < this->x_size; ++x)
+            const size_t full_size = this->getGridSizeX() * this->getGridSizeY();
+            for (size_t i = 0; i < full_size; ++i)
             {
-                for (size_t y = 0; y < this->y_size; ++y)
+                if (this->inner_data[i] != field.inner_data[i])
                 {
-                    if (!(this->getValue(x, y) == field.getValue(x, y)))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
