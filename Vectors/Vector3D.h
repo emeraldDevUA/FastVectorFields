@@ -97,10 +97,10 @@ namespace vfMath
     std::ostream& operator<<(std::ostream& os, const Vector3D<T>& vector)
     {
         os << "{"
-            << "x: " << vector.x
-            << ", y: " << vector.y
-            << ", z: " << vector.z
-            << "} ";
+           << "\"x\": " << vector.x
+           << ", \"y\": " << vector.y
+           << ", \"z\": " << vector.z
+           << "}";
 
         return os;
     }

@@ -70,7 +70,7 @@ namespace vfFields
             }
         }
 
-        T divergence(size_t i, size_t j, T eps = 1e-6) const
+        T divergence(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
         {
             // Assuming your class provides access to u(i,j) and v(i,j)
             // You might need to adapt these if your storage is different
@@ -84,52 +84,61 @@ namespace vfFields
         }
 
 
-        T curl(size_t i, size_t j, T eps = 1e-6) const
+        T curl(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
         {
             // For 2D vector field (u, v), curl = dv/dx - du/dy
-            T dv_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T du_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
+            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
+            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
 
             // Return as Vector2D with curl value in z-component represented as x, y=0
             // Or if you want the scalar curl, consider changing return type to T
-            return dv_dx - du_dy;
+            return du_dx - dv_dy;
         }
 
 
-        void fillWithInterpolation()
+        void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
+            const T rbf_epsilon = static_cast<T>(0.8))
         {
-            T threshold = 1e-6;
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
 
-            std::vector<Vector3D<T>> refCos;
-            std::vector<Vector3D<T>> refSin;
 
-            for (size_t i = 0; i < this->getGridSizeX(); ++i)
+            std::vector<Vector3D<T>> xValues;
+            std::vector<Vector3D<T>> yValues;
+
+            for (size_t i = 0; i <row_size; ++i)
             {
-                for (size_t j = 0; j < this->getGridSizeY(); ++j)
+                for (size_t j = 0; j < column_size; ++j)
                 {
-                    if (auto v = this->getValue(i, j); v.length() > threshold)
+                    if (auto v = this->getValue(i, j); v.length() > empty_point_threshold)
                     {
-                        refCos.push_back({static_cast<T>(i), v.x, static_cast<T>(j)});
-                        refSin.push_back({static_cast<T>(i), v.y, static_cast<T>(j)});
+                        auto x_coord = static_cast<T>(i);
+                        auto z_coord = static_cast<T>(j);
+
+                        xValues.push_back({x_coord, v.x, z_coord});
+                        yValues.push_back({x_coord, v.y, z_coord});
                     }
                 }
             }
 
-            if (refCos.size() < 3) return;
+            if (xValues.size() < 3){
+                throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
+            }
 
-            T epsilon = 0.8;
+            RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon);
+            RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon);
 
-            RBFInterpolator2D<T> rbfCos(refCos, epsilon);
-            RBFInterpolator2D<T> rbfSin(refSin, epsilon);
-
-            for (size_t i = 0; i < this->getGridSizeX(); ++i)
+            for (size_t i = 0; i < row_size; ++i)
             {
-                for (size_t j = 0; j < this->getGridSizeY(); ++j)
+                for (size_t j = 0; j < column_size; ++j)
                 {
-                    T cosVal = rbfCos.evaluate(static_cast<T>(i), static_cast<T>(j));
-                    T sinVal = rbfSin.evaluate(static_cast<T>(i), static_cast<T>(j));
+                    auto x_coord = static_cast<T>(i);
+                    auto z_coord = static_cast<T>(j);
 
-                    Vector2D<T> value(cosVal, sinVal);
+                    T vectorX = xInterpolator.evaluate(x_coord, z_coord);
+                    T vectorY = yInterpolator.evaluate(x_coord, z_coord);
+
+                    Vector2D<T> value(vectorX, vectorY);
                     value.normalize();
 
                     this->setValue(i, j, value);

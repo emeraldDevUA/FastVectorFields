@@ -8,7 +8,7 @@
 namespace vfFields
 {
     template <typename T>
-AbstractField3D<T> AbstractField3D<T>::operator+(const AbstractField3D& field) const
+    AbstractField3D<T> AbstractField3D<T>::operator+(const AbstractField3D& field) const
     {
         AbstractField3D newField(this->x_size, this->y_size, this->z_size);
         // Assuming both fields have the same dimensions

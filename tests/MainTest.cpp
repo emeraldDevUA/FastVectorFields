@@ -50,10 +50,17 @@ int main()
 
     serialize(interpolation_target, "vector_field_poles", "vector_field");
 
-    interpolation_target.fillWithInterpolation();
+    try
+    {
+        interpolation_target.fillWithInterpolation();
+    }   catch (const std::logic_error& e) {
+
+        std::cerr << "exception caught: " << e.what() << '\n';
+    }
 
     serialize(interpolation_target, "vector_field_interpolation", "vector_field");
 
+    std::cout << interpolation_target << std::endl;
 
     return 0;
 }

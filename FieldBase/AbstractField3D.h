@@ -51,11 +51,11 @@ namespace vfFields
             return inner_data[x * y_size + y + (x_size * y_size) * z];
         }
 
-        size_t getGridSizeX() const;
+        [[nodiscard]] size_t getGridSizeX() const;
 
-        size_t getGridSizeY() const;
+        [[nodiscard]] size_t getGridSizeY() const;
 
-        size_t getGridSizeZ() const;
+        [[nodiscard]] size_t getGridSizeZ() const;
 
         T operator()(double x, double y, double z) const;
 
@@ -137,7 +137,7 @@ namespace vfFields
 
 
     template <typename T>
-    T AbstractField3D<T>::operator()(double x, double y, double z) const
+    T AbstractField3D<T>::operator()(const double x, const double y, const double z) const
     {
         const auto ix = static_cast<size_t>(std::floor(x));
         const auto iy = static_cast<size_t>(std::floor(y));

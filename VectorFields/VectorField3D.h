@@ -39,7 +39,7 @@ namespace vfFields
                 {
                     for (size_t k = 1; k < field.getGridSizeY() - 1 ; ++k)
                     {
-                        this->setValue(i, j, k, field.gradient(i, j, 1));
+                        this->setValue(i, j, k, field.gradient(i, j, k));
                     }
                 }
             }
@@ -47,30 +47,53 @@ namespace vfFields
 
 
 
-        T divergence(size_t i, size_t j, size_t k, T eps = 1e-6) const
+        T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
         {
-            // Assuming your class provides access to u(i,j) and v(i,j)
-            // You might need to adapt these if your storage is different
+            const auto& Fx_p = this->getValue(i + 1, j, k);
+            const auto& Fx_m = this->getValue(i - 1, j, k);
 
-            //assume that u(i, j) is this(i, j).x and v(i, j) is this(i, j).y
+            const auto& Fy_p = this->getValue(i, j + 1, k);
+            const auto& Fy_m = this->getValue(i, j - 1, k);
 
-            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
+            const auto& Fz_p = this->getValue(i, j, k + 1);
+            const auto& Fz_m = this->getValue(i, j, k - 1);
 
-            return du_dx + dv_dy;
+            T du_dx = (Fx_p.x - Fx_m.x) / (2 * eps);
+            T dv_dy = (Fy_p.y - Fy_m.y) / (2 * eps);
+            T dw_dz = (Fz_p.z - Fz_m.z) / (2 * eps);
+
+            return du_dx + dv_dy + dw_dz;
         }
 
 
-        T curl(size_t i, size_t j, size_t k, T eps = 1e-6) const
-        {
-            // For 2D vector field (u, v), curl = dv/dx - du/dy
-            T dv_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T du_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
 
-            // Return as Vector2D with curl value in z-component represented as x, y=0
-            // Or if you want the scalar curl, consider changing return type to T
-            return dv_dx - du_dy;
+        Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
+        {
+            const auto& Fx_p = this->getValue(i + 1, j, k);
+            const auto& Fx_m = this->getValue(i - 1, j, k);
+
+            const auto& Fy_p = this->getValue(i, j + 1, k);
+            const auto& Fy_m = this->getValue(i, j - 1, k);
+
+            const auto& Fz_p = this->getValue(i, j, k + 1);
+            const auto& Fz_m = this->getValue(i, j, k - 1);
+
+            T dw_dy = (Fy_p.z - Fy_m.z) / (2 * eps);
+            T dv_dz = (Fz_p.y - Fz_m.y) / (2 * eps);
+
+            T du_dz = (Fz_p.x - Fz_m.x) / (2 * eps);
+            T dw_dx = (Fx_p.z - Fx_m.z) / (2 * eps);
+
+            T dv_dx = (Fx_p.y - Fx_m.y) / (2 * eps);
+            T du_dy = (Fy_p.x - Fy_m.x) / (2 * eps);
+
+            return {
+                dw_dy - dv_dz,   // curl.x
+                du_dz - dw_dx,   // curl.y
+                dv_dx - du_dy    // curl.z
+            };
         }
+
 
 
         void normalize()

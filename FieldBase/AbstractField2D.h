@@ -103,14 +103,26 @@ namespace vfFields
     template <typename T>
     std::ostream& operator<<(std::ostream& os, const AbstractField2D<T>& m)
     {
-        for (size_t y = 0; y < m.getGridSizeY(); ++y)
+        os << "[\n";
+
+        for (size_t i = 0; i < m.getGridSizeY(); ++i)
         {
-            for (size_t x = 0; x < m.getGridSizeX(); ++x)
+            os << "  [";
+
+            for (size_t j = 0; j < m.getGridSizeX(); ++j)
             {
-                os << m.getValue(x, y) << ' ';
+                os << m.getValue(i, j);
+                if (j + 1 < m.getGridSizeX())
+                    os << ", ";
             }
-            os << '\n';
+
+            os << "]";
+            if (i + 1 < m.getGridSizeY())
+                os << ",";
+            os << "\n";
         }
+
+        os << "]";
         return os;
     }
 
