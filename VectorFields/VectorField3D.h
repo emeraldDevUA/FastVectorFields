@@ -5,9 +5,10 @@
 #ifndef FASTVECTORFIELDS_VECTORFIELD3D_H
 #define FASTVECTORFIELDS_VECTORFIELD3D_H
 
+
+#include "../Vectors/Vector3D.h"
 #include "../ScalarFields/ScalarField3D.h"
-#include  "../Vectors/Vector3D.h"
-#include  "../Interpolation/RBFInterpolator2D.h"
+#include "../Interpolation/RBFInterpolator2D.h"
 
 
 using vfMath::Vector3D;
@@ -31,7 +32,7 @@ namespace vfFields
         }
 
         explicit VectorField3D(const ScalarField3D<T>& field)
-            : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY())
+            : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
             for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
             {

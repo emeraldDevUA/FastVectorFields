@@ -1,12 +1,14 @@
 //
 // Created by GameRock on 11/01/2026.
 //
-#include <catch2/catch_test_macros.hpp>
-#include <cereal/archives/json.hpp>
-#include <sstream>
+
 
 #include "../Vectors/Vector2D.h"
 #include "../Vectors/Vector3D.h"
+
+#include <sstream>
+#include <cereal/archives/json.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using vfMath::Vector2D;
 

@@ -5,13 +5,14 @@
 //
 // Created by GameRock on 11/01/2026.
 //
-#include <iostream>
-#include <catch2/catch_test_macros.hpp>
+
 
 #include "../Vectors/Vector2D.h"
 #include "../Vectors/Vector3D.h"
 
 #include "../VectorFields/VectorField2D.h"
+
+#include <catch2/catch_test_macros.hpp>
 
 using vfMath::Vector2D;
 using vfMath::Vector3D;

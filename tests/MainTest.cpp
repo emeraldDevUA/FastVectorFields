@@ -1,17 +1,27 @@
+
+#include "../Vectors/Vector2D.h"
+#include "../Vectors/Vector3D.h"
+
+#include "../FieldBase/AbstractField2D.h"
+#include "../ScalarFields/ScalarField2D.h"
+#include "../VectorFields/VectorField2D.h"
+
+#include "../ScalarFields/ScalarField3D.h"
+#include "../VectorFields/VectorField3D.h"
+
 #include <iostream>
 #include <fstream>
 #include <cereal/types/memory.hpp>
-
-#include "../VectorFields/VectorField2D.h"
-#include "../ScalarFields/ScalarField2D.h"
-#include "../FieldBase/AbstractField2D.h"
-#include "../Vectors/Vector2D.h"
-#include  "../Vectors/Vector3D.h"
 
 using vfMath::Vector2D;
 
 using vfFields::VectorField2D;
 using vfFields::ScalarField2D;
+
+using vfFields::VectorField3D;
+
+using vfFields::ScalarField3D;
+
 
 void serialize(const auto& scalar_field, const std::string& file_name, const std::string& type)
 {
@@ -23,7 +33,7 @@ void serialize(const auto& scalar_field, const std::string& file_name, const std
 
 int main()
 {
-    ScalarField2D<double> scalar_field(512, 512);
+    ScalarField2D<double> scalar_field(64, 64);
 
     scalar_field.fill([](const double x, const double y)
     {
@@ -61,6 +71,21 @@ int main()
     serialize(interpolation_target, "vector_field_interpolation", "vector_field");
 
     std::cout << interpolation_target << std::endl;
+
+
+    ScalarField3D<double> scalar_field_3d(64);
+
+    scalar_field_3d.fill([](double x, double y, double z) {
+        return std::sin(x) * std::cos(y) * std::sin(z);
+    },-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+    VectorField3D<double> vector_field_3d(scalar_field_3d);
+    vector_field_3d.normalize();
+
+    serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
+
+    serialize(vector_field_3d, "vector_field_3d", "vector_field");
+
 
     return 0;
 }

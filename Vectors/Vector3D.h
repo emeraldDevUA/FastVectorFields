@@ -30,7 +30,7 @@ namespace vfMath
 
         T length() const // ✅ const-correct
         {
-            return std::sqrt(x * x + y * y, z * z);
+            return std::sqrt(x * x + y * y + z * z);
         }
 
         void normalize()

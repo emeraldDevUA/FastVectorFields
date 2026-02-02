@@ -10,6 +10,7 @@
 #include <vector>
 #include <cmath>
 #include <cassert>
+
 namespace vfInterpolation
 {
     template <typename T>

@@ -5,8 +5,8 @@
 #ifndef SCALARFIELD2D_H
 #define SCALARFIELD2D_H
 
-#include "../FieldBase/AbstractField2D.h"
 #include "../Vectors/Vector2D.h"
+#include "../FieldBase/AbstractField2D.h"
 
 using vfMath::Vector2D;
 
