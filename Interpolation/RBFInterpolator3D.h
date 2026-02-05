@@ -1,9 +1,9 @@
 //
-// Created by GameRock on 23/01/2026.
+// Created by GameRock on 05/02/2026.
 //
 
-#ifndef FASTVECTORFIELDS_RBFINTERPOLATOR2D_H
-#define FASTVECTORFIELDS_RBFINTERPOLATOR2D_H
+#ifndef FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
+#define FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 
 #include "../Vectors/Vector3D.h"
 #include "Solvers.h"
@@ -14,50 +14,51 @@
 namespace vfInterpolation
 {
     template <typename T>
-    class RBFInterpolator2D
+    class RBFInterpolator3D
     {
     public:
         using Vec3 = vfMath::Vector3D<T>;
 
-        RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon)
+        RBFInterpolator3D(const std::vector<Vec3>& points, const T& epsilon)
             : pts(points), eps(epsilon)
         {
             computeWeights();
         }
 
-        T evaluate(T x, T z) const
+        T evaluate(T x, T y, T z) const
         {
             T result = 0;
             for (size_t i = 0; i < pts.size(); ++i)
             {
-                T r = distance2D(x, z, pts[i].x, pts[i].z);
+                T r = distance3D(x, y, z, pts[i].x, pts[i].y, pts[i].z);
                 result += weights[i] * phi(r);
             }
             return result;
         }
 
-        ~RBFInterpolator2D()
+        ~RBFInterpolator3D()
         {
             pts.clear();
             weights.clear();
         }
-
     private:
         std::vector<Vec3> pts;
         std::vector<T> weights;
         T eps;
 
-        // Inverse Multiquadric RBF kernel
         T phi(T r) const
         {
             return 1.0 / std::sqrt(r * r + eps * eps);
         }
 
-        static T distance2D(T x1, T z1, T x2, T z2)
+        static T distance3D(
+            T x1, T y1, T z1,
+            T x2, T y2, T z2)
         {
             T dx = x1 - x2;
+            T dy = y1 - y2;
             T dz = z1 - z2;
-            return std::sqrt(dx * dx + dz * dz);
+            return std::sqrt(dx*dx + dy*dy + dz*dz);
         }
 
         void computeWeights()
@@ -74,7 +75,7 @@ namespace vfInterpolation
                 b[i] = pts[i].y;
                 for (size_t j = 0; j < N; ++j)
                 {
-                    T r = distance2D(pts[i].x, pts[i].z, pts[j].x, pts[j].z);
+                    T r = distance3D(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z);
                     A[i][j] = phi(r);
                 }
             }
@@ -83,7 +84,6 @@ namespace vfInterpolation
         }
 
     };
-}
+} // vfInterpolation
 
-
-#endif //FASTVECTORFIELDS_RBFINTERPOLATOR2D_H
+#endif //FASTVECTORFIELDS_RBFINTERPOLATOR3D_H

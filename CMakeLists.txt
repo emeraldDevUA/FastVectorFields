@@ -25,6 +25,9 @@ add_library(FastVectorLib
         ScalarFields/ScalarField3D.h
         VectorFields/VectorField3D.cpp
         VectorFields/VectorField3D.h
+        Interpolation/RBFInterpolator3D.cpp
+        Interpolation/RBFInterpolator3D.h
+        Interpolation/Solvers.h
 )
 
 # 2. Create your main application
@@ -40,6 +43,9 @@ add_executable(FastVectorFields tests/MainTest.cpp
         ScalarFields/ScalarField3D.h
         VectorFields/VectorField3D.cpp
         VectorFields/VectorField3D.h
+        Interpolation/RBFInterpolator3D.cpp
+        Interpolation/RBFInterpolator3D.h
+        Interpolation/Solvers.h
 )
 
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
@@ -76,7 +82,10 @@ add_executable(UnitTests tests/VectorTest.cpp
         ScalarFields/ScalarField3D.cpp
         ScalarFields/ScalarField3D.h
         VectorFields/VectorField3D.cpp
-        VectorFields/VectorField3D.h)
+        VectorFields/VectorField3D.h
+        Interpolation/RBFInterpolator3D.cpp
+        Interpolation/RBFInterpolator3D.h
+        Interpolation/Solvers.h)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 

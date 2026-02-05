@@ -6,6 +6,17 @@ in games or visualization.
 
 If you, like me, were looking for such a library but did not find anything quite matching the use-case, then you have found the right library.
 
+### What are vector fields?
+
+A vector field is a common concept in physical/mathematical modeling
+that describes an object that assigns a point in space to a vector value.
+
+#### For 2D:
+$` \vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j`$
+
+#### For 3D: 
+$` \vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k`$
+
 
 ### What data structures do you have to deal with? 
 
@@ -115,3 +126,8 @@ The purpose of this method is to produce vector fields similar to this one based
 |------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | **Graphical representation** | <img src="https://i.imgur.com/UDPPSFy.png" alt="https://imgur.com/a/szF2nss" width="768"> | <img src="https://i.imgur.com/WzAtzrL.png" alt="https://imgur.com/a/szF2nss" width="768"> |
 
+
+
+### Moving to 3 dimensions
+
+Vector fields can easily be extended to three dimensions.

@@ -76,11 +76,11 @@ int main()
     ScalarField3D<double> scalar_field_3d(64);
 
     scalar_field_3d.fill([](double x, double y, double z) {
-        return std::sin(x) * std::cos(y) * std::sin(z);
-    },-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+        return std::exp(-(x*x + y*y + z*z));
+    }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
     VectorField3D<double> vector_field_3d(scalar_field_3d);
-    vector_field_3d.normalize();
+    //vector_field_3d.normalize();
 
     serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
 

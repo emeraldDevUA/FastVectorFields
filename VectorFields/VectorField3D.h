@@ -34,13 +34,14 @@ namespace vfFields
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
+
             for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
             {
                 for (size_t j = 1; j < field.getGridSizeY() - 1 ; ++j)
                 {
-                    for (size_t k = 1; k < field.getGridSizeY() - 1 ; ++k)
+                    for (size_t k = 1; k < field.getGridSizeZ() - 1 ; ++k)
                     {
-                        this->setValue(i, j, k, field.gradient(i, j, k));
+                        this->setValue(i, j, k, field.gradient(i, j, k, 1));
                     }
                 }
             }
@@ -95,6 +96,59 @@ namespace vfFields
             };
         }
 
+        void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
+            const T rbf_epsilon = static_cast<T>(0.8))
+        {
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
+            auto matrix_depth = this->z_size;
+
+
+            std::vector<Vector3D<T>> xValues;
+            std::vector<Vector3D<T>> yValues;
+
+            for (size_t i = 0; i < row_size; ++i)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    if (auto v = this->getValue(i, j); v.length() > empty_point_threshold)
+                    {
+                        auto x_coord = static_cast<T>(i);
+                        auto z_coord = static_cast<T>(j);
+
+                        xValues.push_back({x_coord, v.x, z_coord});
+                        yValues.push_back({x_coord, v.y, z_coord});
+                    }
+                }
+            }
+
+            if (xValues.size() < 3){
+                throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
+            }
+
+            RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon);
+            RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon);
+
+            for (size_t i = 0; i < row_size; ++i)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    for (size_t k = 0; k < matrix_depth; ++k)
+                    {
+                        auto x_coord = static_cast<T>(i);
+                        auto z_coord = static_cast<T>(j);
+
+                        T vectorX = xInterpolator.evaluate(x_coord, z_coord);
+                        T vectorY = yInterpolator.evaluate(x_coord, z_coord);
+
+                        Vector3D<T> value(vectorX, vectorY, 0);
+                        value.normalize();
+
+                        this->setValue(i, j,k, value);
+                    }
+                }
+            }
+        }
 
 
         void normalize()
