@@ -1,12 +1,14 @@
 //
 // Created by GameRock on 11/01/2026.
 //
-#include <catch2/catch_test_macros.hpp>
-#include <cereal/archives/json.hpp>
-#include <sstream>
 
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
+
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
+
+#include <sstream>
+#include <cereal/archives/json.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using vfMath::Vector2D;
 
@@ -42,7 +44,8 @@ TEST_CASE("Vector2D Basic Operations", "[vector]")
         REQUIRE(result.y == 10.0);
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {
@@ -59,7 +62,6 @@ TEST_CASE("Vector2D Basic Operations", "[vector]")
         REQUIRE(loaded.x == v1.x);
         REQUIRE(loaded.y == v1.y);
     }
-
 }
 
 TEST_CASE("Vector3D Basic Operations", "[vector]")
@@ -94,7 +96,8 @@ TEST_CASE("Vector3D Basic Operations", "[vector]")
         REQUIRE(result.z == 15.0);
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {

@@ -2,41 +2,43 @@
 // Created by GameRock on 06/01/2026.
 //
 
-#include "AbstractField2D.h"
+#include "AbstractField2D.hpp"
 
-
-template <typename T>
-AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) const
+namespace vfFields
 {
-    AbstractField2D newField(this->x_size, this->y_size);
-    // Assuming both fields have the same dimensions
-    for (size_t i = 0; i < this->x_size; i++)
+    template <typename T>
+    AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) const
     {
-        T sum;
-        for (size_t j = 0; j < this->y_size; ++j)
+        AbstractField2D newField(this->x_size, this->y_size);
+        // Assuming both fields have the same dimensions
+        for (size_t i = 0; i < this->x_size; i++)
         {
-            sum = this->getValue(i, j) + field.getValue(i, j);
-            newField.setValue(i, j, sum);
+            T sum;
+            for (size_t j = 0; j < this->y_size; ++j)
+            {
+                sum = this->getValue(i, j) + field.getValue(i, j);
+                newField.setValue(i, j, sum);
+            }
         }
+
+        return newField;
     }
 
-    return newField;
-}
-
-template <typename T>
-AbstractField2D<T> AbstractField2D<T>::operator-(const AbstractField2D& field) const
-{
-    AbstractField2D newField(this->x_size, this->y_size);
-    // Assuming both fields have the same dimensions
-    for (size_t i = 0; i < this->x_size; i++)
+    template <typename T>
+    AbstractField2D<T> AbstractField2D<T>::operator-(const AbstractField2D& field) const
     {
-        T difference;
-        for (size_t j = 0; j < this->y_size; ++j)
+        AbstractField2D newField(this->x_size, this->y_size);
+        // Assuming both fields have the same dimensions
+        for (size_t i = 0; i < this->x_size; i++)
         {
-            difference = this->getValue(i, j) - field.getValue(i, j);
-            newField.setValue(i, j, difference);
+            T difference;
+            for (size_t j = 0; j < this->y_size; ++j)
+            {
+                difference = this->getValue(i, j) - field.getValue(i, j);
+                newField.setValue(i, j, difference);
+            }
         }
-    }
 
-    return newField;
+        return newField;
+    }
 }

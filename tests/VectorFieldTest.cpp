@@ -5,16 +5,18 @@
 //
 // Created by GameRock on 11/01/2026.
 //
-#include <iostream>
+
+
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
+
+#include "../VectorFields/VectorField2D.hpp"
+
 #include <catch2/catch_test_macros.hpp>
-
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
-
-#include "../VectorFields/VectorField2D.h"
 
 using vfMath::Vector2D;
 using vfMath::Vector3D;
+using vfFields::VectorField2D;
 
 
 TEST_CASE("VectorField Operations", "[vector]")
@@ -118,7 +120,8 @@ TEST_CASE("VectorField Operations", "[vector]")
         }
     }
 
-    SECTION("Serialization test") {
+    SECTION("Serialization test")
+    {
         std::stringstream ss;
 
         {
