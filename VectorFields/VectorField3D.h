@@ -7,12 +7,14 @@
 
 
 #include "../Vectors/Vector3D.h"
+#include "../Vectors/Vector4D.h"
 #include "../ScalarFields/ScalarField3D.h"
-#include "../Interpolation/RBFInterpolator2D.h"
+#include "../Interpolation/RBFInterpolator3D.h"
 
 
 using vfMath::Vector3D;
-using vfInterpolation::RBFInterpolator2D;
+using vfMath::Vector4D;
+using vfInterpolation::RBFInterpolator3D;
 
 
 namespace vfFields
@@ -104,20 +106,26 @@ namespace vfFields
             auto matrix_depth = this->z_size;
 
 
-            std::vector<Vector3D<T>> xValues;
-            std::vector<Vector3D<T>> yValues;
+            std::vector<Vector4D<T>> xValues;
+            std::vector<Vector4D<T>> yValues;
+            std::vector<Vector4D<T>> zValues;
 
-            for (size_t i = 0; i < row_size; ++i)
+            for (size_t k = 0; k < matrix_depth; ++k)
             {
-                for (size_t j = 0; j < column_size; ++j)
+                for (size_t i = 0; i < row_size; ++i)
                 {
-                    if (auto v = this->getValue(i, j); v.length() > empty_point_threshold)
+                    for (size_t j = 0; j < column_size; ++j)
                     {
-                        auto x_coord = static_cast<T>(i);
-                        auto z_coord = static_cast<T>(j);
+                        if (auto v = this->getValue(i, j, k); v.length() > empty_point_threshold)
+                        {
+                            auto x_coord = static_cast<T>(i);
+                            auto y_coord = static_cast<T>(j);
+                            auto z_coord = static_cast<T>(k);
 
-                        xValues.push_back({x_coord, v.x, z_coord});
-                        yValues.push_back({x_coord, v.y, z_coord});
+                            xValues.push_back({x_coord, y_coord, z_coord, v.x});
+                            yValues.push_back({x_coord, y_coord, z_coord, v.y});
+                            zValues.push_back({x_coord, y_coord, z_coord, v.z});
+                        }
                     }
                 }
             }
@@ -126,22 +134,26 @@ namespace vfFields
                 throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
             }
 
-            RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon);
-            RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon);
+            RBFInterpolator3D<T> xInterpolator(xValues, rbf_epsilon);
+            RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon);
+            RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon);
 
+                    for (size_t k = 0; k < matrix_depth; ++k)
+                    {
             for (size_t i = 0; i < row_size; ++i)
             {
                 for (size_t j = 0; j < column_size; ++j)
                 {
-                    for (size_t k = 0; k < matrix_depth; ++k)
-                    {
+
                         auto x_coord = static_cast<T>(i);
-                        auto z_coord = static_cast<T>(j);
+                        auto y_coord = static_cast<T>(j);
+                        auto z_coord = static_cast<T>(k);
 
-                        T vectorX = xInterpolator.evaluate(x_coord, z_coord);
-                        T vectorY = yInterpolator.evaluate(x_coord, z_coord);
+                        T vectorX = xInterpolator.evaluate(x_coord, y_coord, z_coord);
+                        T vectorY = yInterpolator.evaluate(x_coord, y_coord, z_coord);
+                        T vectorZ = zInterpolator.evaluate(x_coord, y_coord, z_coord);
 
-                        Vector3D<T> value(vectorX, vectorY, 0);
+                        Vector3D<T> value(vectorX, vectorY, vectorZ);
                         value.normalize();
 
                         this->setValue(i, j,k, value);

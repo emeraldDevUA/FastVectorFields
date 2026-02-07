@@ -28,6 +28,8 @@ add_library(FastVectorLib
         Interpolation/RBFInterpolator3D.cpp
         Interpolation/RBFInterpolator3D.h
         Interpolation/Solvers.h
+        Vectors/Vector4D.cpp
+        Vectors/Vector4D.h
 )
 
 # 2. Create your main application
@@ -46,6 +48,8 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Interpolation/RBFInterpolator3D.cpp
         Interpolation/RBFInterpolator3D.h
         Interpolation/Solvers.h
+        Vectors/Vector4D.cpp
+        Vectors/Vector4D.h
 )
 
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
@@ -85,7 +89,9 @@ add_executable(UnitTests tests/VectorTest.cpp
         VectorFields/VectorField3D.h
         Interpolation/RBFInterpolator3D.cpp
         Interpolation/RBFInterpolator3D.h
-        Interpolation/Solvers.h)
+        Interpolation/Solvers.h
+        Vectors/Vector4D.cpp
+        Vectors/Vector4D.h)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 

@@ -5,7 +5,7 @@
 #ifndef FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 #define FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 
-#include "../Vectors/Vector3D.h"
+#include "../Vectors/Vector4D.h"
 #include "Solvers.h"
 
 #include <vector>
@@ -17,10 +17,12 @@ namespace vfInterpolation
     class RBFInterpolator3D
     {
     public:
-        using Vec3 = vfMath::Vector3D<T>;
+        using Vec4 = vfMath::Vector4D<T>;
 
-        RBFInterpolator3D(const std::vector<Vec3>& points, const T& epsilon)
-            : pts(points), eps(epsilon)
+        RBFInterpolator3D(
+            const std::vector<Vec4>& samples,
+            T epsilon)
+            : pts(samples), eps(epsilon)
         {
             computeWeights();
         }
@@ -28,27 +30,29 @@ namespace vfInterpolation
         T evaluate(T x, T y, T z) const
         {
             T result = 0;
+
             for (size_t i = 0; i < pts.size(); ++i)
             {
-                T r = distance3D(x, y, z, pts[i].x, pts[i].y, pts[i].z);
+                T r = distance3D(
+                    x, y, z,
+                    pts[i].x, pts[i].y, pts[i].z
+                );
+
                 result += weights[i] * phi(r);
             }
+
             return result;
         }
 
-        ~RBFInterpolator3D()
-        {
-            pts.clear();
-            weights.clear();
-        }
     private:
-        std::vector<Vec3> pts;
+        std::vector<Vec4> pts;
         std::vector<T> weights;
         T eps;
 
+        // Inverse multiquadric RBF
         T phi(T r) const
         {
-            return 1.0 / std::sqrt(r * r + eps * eps);
+            return T(1) / std::sqrt(r*r + eps*eps);
         }
 
         static T distance3D(
@@ -63,25 +67,32 @@ namespace vfInterpolation
 
         void computeWeights()
         {
-            size_t N = pts.size();
+            const size_t N = pts.size();
             weights.resize(N);
 
             std::vector<std::vector<T>> A(N, std::vector<T>(N));
             std::vector<T> b(N);
 
-            // Build system A * w = b
+            // Build linear system A * weights = b
             for (size_t i = 0; i < N; ++i)
             {
-                b[i] = pts[i].y;
+                b[i] = pts[i].w;
+
                 for (size_t j = 0; j < N; ++j)
                 {
-                    T r = distance3D(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z);
+                    T r = distance3D(
+                        pts[i].x, pts[i].y, pts[i].z,
+                        pts[j].x, pts[j].y, pts[j].z
+                    );
+
                     A[i][j] = phi(r);
                 }
             }
 
             solveLinearSystem(A, b, weights);
         }
+
+        // Naive Gaussian elimination (small N only)
 
     };
 } // vfInterpolation

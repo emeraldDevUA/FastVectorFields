@@ -79,13 +79,20 @@ int main()
         return std::exp(-(x*x + y*y + z*z));
     }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
-    VectorField3D<double> vector_field_3d(scalar_field_3d);
+    VectorField3D<double> vector_field_3d(12);
     //vector_field_3d.normalize();
 
-    serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
+    // serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
+    //
+    // serialize(vector_field_3d, "vector_field_3d", "vector_field");
+
+    vector_field_3d.setValue(0,0,0, {1,1,1});
+    vector_field_3d.setValue(5,5,5, {-0.4,0.5,0.5});
+    vector_field_3d.setValue(11,11,11, {-1,-1,-1});
+
+    vector_field_3d.fillWithInterpolation();
 
     serialize(vector_field_3d, "vector_field_3d", "vector_field");
-
 
     return 0;
 }
