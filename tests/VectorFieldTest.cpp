@@ -7,10 +7,10 @@
 //
 
 
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
 
-#include "../VectorFields/VectorField2D.h"
+#include "../VectorFields/VectorField2D.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 

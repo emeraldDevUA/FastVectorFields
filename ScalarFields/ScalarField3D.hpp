@@ -6,8 +6,8 @@
 #define FASTVECTORFIELDS_SCALARFIELD3D_H
 
 
-#include "../Vectors/Vector3D.h"
-#include "../FieldBase/AbstractField3D.h"
+#include "../Vectors/Vector3D.hpp"
+#include "../FieldBase/AbstractField3D.hpp"
 
 using vfMath::Vector3D;
 

@@ -3,8 +3,8 @@
 //
 
 
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
 
 #include <sstream>
 #include <cereal/archives/json.hpp>

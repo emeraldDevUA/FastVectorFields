@@ -5,8 +5,8 @@
 #ifndef FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 #define FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 
-#include "../Vectors/Vector4D.h"
-#include "Solvers.h"
+#include "../Vectors/Vector4D.hpp"
+#include "Solvers.hpp"
 
 #include <vector>
 #include <cmath>

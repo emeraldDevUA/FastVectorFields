@@ -1,13 +1,13 @@
 
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
 
-#include "../FieldBase/AbstractField2D.h"
-#include "../ScalarFields/ScalarField2D.h"
-#include "../VectorFields/VectorField2D.h"
+#include "../FieldBase/AbstractField2D.hpp"
+#include "../ScalarFields/ScalarField2D.hpp"
+#include "../VectorFields/VectorField2D.hpp"
 
-#include "../ScalarFields/ScalarField3D.h"
-#include "../VectorFields/VectorField3D.h"
+#include "../ScalarFields/ScalarField3D.hpp"
+#include "../VectorFields/VectorField3D.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -75,7 +75,7 @@ int main()
 
     ScalarField3D<double> scalar_field_3d(64);
 
-    scalar_field_3d.fill([](double x, double y, double z) {
+    scalar_field_3d.fill([](const double x, const double y, const double z) {
         return std::exp(-(x*x + y*y + z*z));
     }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 

@@ -5,9 +5,9 @@
 #ifndef VECTORFIELD2D_H
 #define VECTORFIELD2D_H
 
-#include "../Vectors/Vector3D.h"
-#include "../ScalarFields/ScalarField2D.h"
-#include "../Interpolation/RBFInterpolator2D.h"
+#include "../Vectors/Vector3D.hpp"
+#include "../ScalarFields/ScalarField2D.hpp"
+#include "../Interpolation/RBFInterpolator2D.hpp"
 
 
 using vfMath::Vector3D;

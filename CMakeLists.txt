@@ -7,49 +7,40 @@ set(CMAKE_CXX_STANDARD 20)
 # This allows both your app and your tests to use these classes.
 add_library(FastVectorLib
         FieldBase/AbstractField2D.cpp
-        FieldBase/AbstractField2D.h
+        FieldBase/AbstractField2D.hpp
         VectorFields/VectorField2D.cpp
-        VectorFields/VectorField2D.h
-        Vectors/Vector2D.cpp
-        Vectors/Vector2D.h
+        VectorFields/VectorField2D.hpp
+        Vectors/Vector2D.hpp
         ScalarFields/ScalarField2D.cpp
-        ScalarFields/ScalarField2D.h
-        NumericalConstants.h
-        Vectors/Vector3D.cpp
-        Vectors/Vector3D.h
-        Interpolation/RBFInterpolator2D.cpp
-        Interpolation/RBFInterpolator2D.h
+        ScalarFields/ScalarField2D.hpp
+        NumericalConstants.hpp
+        Vectors/Vector3D.hpp
+        Interpolation/RBFInterpolator2D.hpp
         FieldBase/AbstractField3D.cpp
-        FieldBase/AbstractField3D.h
+        FieldBase/AbstractField3D.hpp
         ScalarFields/ScalarField3D.cpp
-        ScalarFields/ScalarField3D.h
+        ScalarFields/ScalarField3D.hpp
         VectorFields/VectorField3D.cpp
-        VectorFields/VectorField3D.h
-        Interpolation/RBFInterpolator3D.cpp
-        Interpolation/RBFInterpolator3D.h
-        Interpolation/Solvers.h
-        Vectors/Vector4D.cpp
-        Vectors/Vector4D.h
+        VectorFields/VectorField3D.hpp
+        Interpolation/RBFInterpolator3D.hpp
+        Interpolation/Solvers.hpp
+        Vectors/Vector4D.hpp
 )
 
 # 2. Create your main application
 # Only include main.cpp here. Link the library for the rest.
 add_executable(FastVectorFields tests/MainTest.cpp
-        Vectors/Vector3D.cpp
-        Vectors/Vector3D.h
-        Interpolation/RBFInterpolator2D.cpp
-        Interpolation/RBFInterpolator2D.h
+        Vectors/Vector3D.hpp
+        Interpolation/RBFInterpolator2D.hpp
         FieldBase/AbstractField3D.cpp
-        FieldBase/AbstractField3D.h
+        FieldBase/AbstractField3D.hpp
         ScalarFields/ScalarField3D.cpp
-        ScalarFields/ScalarField3D.h
+        ScalarFields/ScalarField3D.hpp
         VectorFields/VectorField3D.cpp
-        VectorFields/VectorField3D.h
-        Interpolation/RBFInterpolator3D.cpp
-        Interpolation/RBFInterpolator3D.h
-        Interpolation/Solvers.h
-        Vectors/Vector4D.cpp
-        Vectors/Vector4D.h
+        VectorFields/VectorField3D.hpp
+        Interpolation/RBFInterpolator3D.hpp
+        Interpolation/Solvers.hpp
+        Vectors/Vector4D.hpp
 )
 
 target_include_directories(FastVectorFields PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
@@ -76,22 +67,18 @@ enable_testing()
 
 # Create the test executable (Ensure tests/test_main.cpp exists!)
 add_executable(UnitTests tests/VectorTest.cpp
-        Vectors/Vector3D.cpp
-        Vectors/Vector3D.h
-        Interpolation/RBFInterpolator2D.cpp
-        Interpolation/RBFInterpolator2D.h
+        Vectors/Vector3D.hpp
+        Interpolation/RBFInterpolator2D.hpp
         tests/VectorFieldTest.cpp
         FieldBase/AbstractField3D.cpp
-        FieldBase/AbstractField3D.h
+        FieldBase/AbstractField3D.hpp
         ScalarFields/ScalarField3D.cpp
-        ScalarFields/ScalarField3D.h
+        ScalarFields/ScalarField3D.hpp
         VectorFields/VectorField3D.cpp
-        VectorFields/VectorField3D.h
-        Interpolation/RBFInterpolator3D.cpp
-        Interpolation/RBFInterpolator3D.h
-        Interpolation/Solvers.h
-        Vectors/Vector4D.cpp
-        Vectors/Vector4D.h)
+        VectorFields/VectorField3D.hpp
+        Interpolation/RBFInterpolator3D.hpp
+        Interpolation/Solvers.hpp
+        Vectors/Vector4D.hpp)
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 

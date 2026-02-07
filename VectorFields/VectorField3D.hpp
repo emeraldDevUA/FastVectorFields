@@ -6,10 +6,10 @@
 #define FASTVECTORFIELDS_VECTORFIELD3D_H
 
 
-#include "../Vectors/Vector3D.h"
-#include "../Vectors/Vector4D.h"
-#include "../ScalarFields/ScalarField3D.h"
-#include "../Interpolation/RBFInterpolator3D.h"
+#include "../Vectors/Vector3D.hpp"
+#include "../Vectors/Vector4D.hpp"
+#include "../ScalarFields/ScalarField3D.hpp"
+#include "../Interpolation/RBFInterpolator3D.hpp"
 
 
 using vfMath::Vector3D;
