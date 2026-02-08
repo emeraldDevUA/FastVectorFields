@@ -28,8 +28,8 @@ namespace vfFields
         {
         }
 
-        VectorField3D(size_t x_size, size_t y_size)
-            : AbstractField3D<Vector3D<T>>(x_size, y_size)
+        VectorField3D(size_t x_size, size_t y_size, size_t z_size )
+            : AbstractField3D<Vector3D<T>>(x_size, y_size, z_size)
         {
         }
 
@@ -165,10 +165,9 @@ namespace vfFields
 
         void normalize()
         {
-            const size_t full_size = this->getGridSizeX() * this->getGridSizeY() * this->getGridSizeZ();
-            for (size_t i = 0; i < full_size; ++i)
+            for (auto& v : this->inner_data)
             {
-                this->inner_data[i].normalize();
+                v.normalize();
             }
         }
     };

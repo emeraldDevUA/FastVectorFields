@@ -86,6 +86,15 @@ fields. They can be visualized using matplotlib or plotly charts.
 
 #### For 2D:
 
+$$
+\begin{aligned}
+f(x,y) &= \sin\!\left( 8\pi r + 4\theta \right), \\
+r &= \sqrt{x^2 + y^2}, \\
+\theta &= \operatorname{atan2}(y,x), \\
+(x,y) &\in [-1,1] \times [-1,1] 
+\end{aligned}
+\
+$$
 
 | Field type       | High resolution                                                                               | Low resolution                                                                          |
 |------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
@@ -94,10 +103,20 @@ fields. They can be visualized using matplotlib or plotly charts.
 
 #### For 3D:
 
-| Field type       | High resolution                                                                           | Low resolution                                                                            |
-|------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
-| **Scalar field** | <img src="https://i.imgur.com/3fz93rL.png" alt="https://imgur.com/3fz93rL" width="768"> | <img src="https://i.imgur.com/4e8NJWP.png" alt="https://imgur.com/4e8NJWP" width="768">   |
-| **Vector field** | <img src="https://i.imgur.com/mz7nOdS.png" alt="https://imgur.com/mz7nOdS" width="768">   | <img src="https://i.imgur.com/7D3kfRG.png" alt="https://imgur.com/7D3kfRG" width="768"> |
+$$
+\begin{aligned}
+f(x,y,z) &= \sin\!\left( 8\pi r + 4\theta \right), \\
+r &= \sqrt{x^2 + y^2}, \\
+\theta &= \operatorname{atan2}(y,x), \\
+(x,y,z) &\in [-1,1] \times [-1,1] \times [-1,1]
+\end{aligned}
+\
+$$
+
+| Field type       | High resolution                                                                         | Low resolution                                                                          |
+|------------------|-----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| **Scalar field** | <img src="https://i.imgur.com/3fz93rL.png" alt="https://imgur.com/3fz93rL" width="768"> | <img src="https://i.imgur.com/4e8NJWP.png" alt="https://imgur.com/4e8NJWP" width="768"> |
+| **Vector field** | <img src="https://i.imgur.com/mz7nOdS.png" alt="https://imgur.com/mz7nOdS" width="768"> | <img src="https://i.imgur.com/7D3kfRG.png" alt="https://imgur.com/7D3kfRG" width="768"> |
 
 
 ### Interpolation feature
@@ -117,7 +136,7 @@ auto result = a(0.5, 0.5);
 
 Use case: getting additional samples between the tiles.
 
-- Interpolation restoration ?
+- Interpolation restoration
 
 Uses RBF-interpolation to fill the data structure with approximated vectors.
 ```cpp
@@ -131,8 +150,14 @@ Use case: filling in the gaps between the vectors(at least 3).
 
 The purpose of this method is to produce vector fields similar to this one based on a limited number of entries.
 
+#### For 2D:
 
 | Field type                   | Input (Initial Vectors)                                                                   | Output (Complete Vector field)                                                            |
 |------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | **Graphical representation** | <img src="https://i.imgur.com/UDPPSFy.png" alt="https://imgur.com/a/szF2nss" width="768"> | <img src="https://i.imgur.com/WzAtzrL.png" alt="https://imgur.com/a/szF2nss" width="768"> |
 
+#### For 3D:
+
+| Field type                   | Input (Initial Vectors)                                                                   | Output (Complete Vector field)                                                            |
+|------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| **Graphical representation** | <img src="https://i.imgur.com/6ZyvxXE.png" alt="https://imgur.com/6ZyvxXE" width="768"> | <img src="https://i.imgur.com/I8il9pr.png" alt="https://imgur.com/a/B3fbd9g" width="768"> |

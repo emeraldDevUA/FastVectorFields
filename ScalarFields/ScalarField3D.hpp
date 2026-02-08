@@ -27,6 +27,11 @@ namespace vfFields
         {
         }
 
+        explicit ScalarField3D(size_t x_size, size_t y_size, size_t z_size)
+            : AbstractField3D<T>(x_size, y_size, z_size)
+        {
+        }
+
         template <typename Function>
         void fill(Function&& function, T x0, T x1, T y0, T y1, T z0, T z1)
         {
