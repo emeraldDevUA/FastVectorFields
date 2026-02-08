@@ -88,12 +88,9 @@ fields. They can be visualized using matplotlib or plotly charts.
 
 $$
 \begin{aligned}
-f(x,y) &= \sin\!\left( 8\pi r + 4\theta \right), \\
-r &= \sqrt{x^2 + y^2}, \\
-\theta &= \operatorname{atan2}(y,x), \\
-(x,y) &\in [-1,1] \times [-1,1] 
+f(x,y) &= \sin\!\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
+(x,y) &\in [-1,1] \times [-1,1]
 \end{aligned}
-\
 $$
 
 | Field type       | High resolution                                                                               | Low resolution                                                                          |
@@ -105,12 +102,9 @@ $$
 
 $$
 \begin{aligned}
-f(x,y,z) &= \sin\!\left( 8\pi r + 4\theta \right), \\
-r &= \sqrt{x^2 + y^2}, \\
-\theta &= \operatorname{atan2}(y,x), \\
+f(x,y, z) &= \sin\!\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
 (x,y,z) &\in [-1,1] \times [-1,1] \times [-1,1]
 \end{aligned}
-\
 $$
 
 | Field type       | High resolution                                                                         | Low resolution                                                                          |
@@ -129,8 +123,10 @@ Uses bilinear or trilinear interpolation to sample between the tiles.
 
 ```cpp
 VectorField2D<double> a(3, 3);
+
 a.setValue(0, 0, {1.0, 1.0});
 a.setValue(1, 1, {-1.0, -1.0});
+
 auto result = a(0.5, 0.5);
  ```
 
@@ -141,9 +137,12 @@ Use case: getting additional samples between the tiles.
 Uses RBF-interpolation to fill the data structure with approximated vectors.
 ```cpp
 VectorField2D<double> a(16, 16);
+
+// Setting only 3 vectors, the rest will be filled with interpolation.
 a.setValue(0, 0, {1.0, 0.0});
 a.setValue(3, 3, {-1.0, 0});
 a.setValue(1, 1, {0.5, -0.5});
+
 a.fillWithInterpolation();
 ```
 Use case: filling in the gaps between the vectors(at least 3).
