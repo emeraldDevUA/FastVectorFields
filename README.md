@@ -82,12 +82,22 @@ int main()
 ```
 
 This code produces two `.json` files that contain two serialized (row-major)
-fields. They can be visualized using matplotlib.
+fields. They can be visualized using matplotlib or plotly charts.
+
+#### For 2D:
+
 
 | Field type       | High resolution                                                                               | Low resolution                                                                          |
 |------------------|-----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
 | **Scalar field** | <img src="https://i.imgur.com/IgstqDF.png" alt="https://imgur.com/a/szF2nss" width="768">     | <img src="https://i.imgur.com/qMfzTqw.png" alt="https://imgur.com/qMfzTqw" width="768"> |
 | **Vector field** | <img src="https://i.imgur.com/FUdcHgT.png" alt="https://i.imgur.com/FUdcHgT.png" width="768"> | <img src="https://i.imgur.com/EmnDeYz.png" alt="https://imgur.com/EmnDeYz" width="768"> |
+
+#### For 3D:
+
+| Field type       | High resolution                                                                           | Low resolution                                                                            |
+|------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| **Scalar field** | <img src="https://i.imgur.com/3fz93rL.png" alt="https://imgur.com/3fz93rL" width="768"> | <img src="https://i.imgur.com/4e8NJWP.png" alt="https://imgur.com/4e8NJWP" width="768">   |
+| **Vector field** | <img src="https://i.imgur.com/mz7nOdS.png" alt="https://imgur.com/mz7nOdS" width="768">   | <img src="https://i.imgur.com/7D3kfRG.png" alt="https://imgur.com/7D3kfRG" width="768"> |
 
 
 ### Interpolation feature
@@ -126,8 +136,3 @@ The purpose of this method is to produce vector fields similar to this one based
 |------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | **Graphical representation** | <img src="https://i.imgur.com/UDPPSFy.png" alt="https://imgur.com/a/szF2nss" width="768"> | <img src="https://i.imgur.com/WzAtzrL.png" alt="https://imgur.com/a/szF2nss" width="768"> |
 
-
-
-### Moving to 3 dimensions
-
-Vector fields can easily be extended to three dimensions.

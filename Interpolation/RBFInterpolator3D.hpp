@@ -92,8 +92,6 @@ namespace vfInterpolation
             solveLinearSystem(A, b, weights);
         }
 
-        // Naive Gaussian elimination (small N only)
-
     };
 } // vfInterpolation
 

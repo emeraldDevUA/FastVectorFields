@@ -22,6 +22,7 @@ namespace vfMath
         T x{};
         T y{};
         T z{};
+
         Vector3D() = default;
 
         Vector3D(T x, T y, T z) : x(x), y(y), z(z)
