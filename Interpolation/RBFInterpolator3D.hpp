@@ -44,6 +44,12 @@ namespace vfInterpolation
             return result;
         }
 
+        ~RBFInterpolator3D()
+        {
+            pts.clear();
+            weights.clear();
+        }
+
     private:
         std::vector<Vec4> pts;
         std::vector<T> weights;

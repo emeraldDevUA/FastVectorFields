@@ -8,19 +8,15 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(FastVectorLib
         FieldBase/AbstractField2D.cpp
         FieldBase/AbstractField2D.hpp
-        VectorFields/VectorField2D.cpp
         VectorFields/VectorField2D.hpp
         Vectors/Vector2D.hpp
-        ScalarFields/ScalarField2D.cpp
         ScalarFields/ScalarField2D.hpp
         NumericalConstants.hpp
         Vectors/Vector3D.hpp
         Interpolation/RBFInterpolator2D.hpp
         FieldBase/AbstractField3D.cpp
         FieldBase/AbstractField3D.hpp
-        ScalarFields/ScalarField3D.cpp
         ScalarFields/ScalarField3D.hpp
-        VectorFields/VectorField3D.cpp
         VectorFields/VectorField3D.hpp
         Interpolation/RBFInterpolator3D.hpp
         Interpolation/Solvers.hpp
@@ -34,9 +30,7 @@ add_executable(FastVectorFields tests/MainTest.cpp
         Interpolation/RBFInterpolator2D.hpp
         FieldBase/AbstractField3D.cpp
         FieldBase/AbstractField3D.hpp
-        ScalarFields/ScalarField3D.cpp
         ScalarFields/ScalarField3D.hpp
-        VectorFields/VectorField3D.cpp
         VectorFields/VectorField3D.hpp
         Interpolation/RBFInterpolator3D.hpp
         Interpolation/Solvers.hpp
@@ -72,9 +66,7 @@ add_executable(UnitTests tests/VectorTest.cpp
         tests/VectorFieldTest.cpp
         FieldBase/AbstractField3D.cpp
         FieldBase/AbstractField3D.hpp
-        ScalarFields/ScalarField3D.cpp
         ScalarFields/ScalarField3D.hpp
-        VectorFields/VectorField3D.cpp
         VectorFields/VectorField3D.hpp
         Interpolation/RBFInterpolator3D.hpp
         Interpolation/Solvers.hpp

@@ -102,7 +102,7 @@ $$
 
 $$
 \begin{aligned}
-f(x,y, z) &= \sin\!\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
+f(x,y, z) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
 (x,y,z) &\in [-1,1] \times [-1,1] \times [-1,1]
 \end{aligned}
 $$
@@ -157,6 +157,16 @@ The purpose of this method is to produce vector fields similar to this one based
 
 #### For 3D:
 
-| Field type                   | Input (Initial Vectors)                                                                   | Output (Complete Vector field)                                                            |
-|------------------------------|-------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Field type                   | Input (Initial Vectors)                                                                 | Output (Complete Vector field)                                                            |
+|------------------------------|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | **Graphical representation** | <img src="https://i.imgur.com/6ZyvxXE.png" alt="https://imgur.com/6ZyvxXE" width="768"> | <img src="https://i.imgur.com/I8il9pr.png" alt="https://imgur.com/a/B3fbd9g" width="768"> |
+
+
+All in all, that is it when it comes to the implemented functionality.
+
+If you have any questions, suggestions or want to contribute, please do not hesitate to contact me or create a pull request.
+
+## 📫 Contact
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/yurii-kokhanchuk-a37b8a293/)
+[![Gmail](https://img.shields.io/badge/Gmail-Email-red?logo=gmail)](mailto:your.email@gmail.com)

@@ -4,9 +4,9 @@
 
 #ifndef FASTVECTORFIELDS_SOLVERS_H
 #define FASTVECTORFIELDS_SOLVERS_H
+
 #include <vector>
 #include <cmath>
-#include <cassert>
 
 // Gaussian elimination (small systems, good enough for terrain/fields)
 
@@ -22,7 +22,10 @@ void solveLinearSystem(
     {
         // Pivot
         T pivot = A[i][i];
-        assert(std::abs(pivot) > 1e-12);
+        if(std::abs(pivot) < 1e-12)
+        {
+            throw std::runtime_error("Matrix is singular or nearly singular");
+        }
 
         for (size_t j = i; j < N; ++j)
             A[i][j] /= pivot;
