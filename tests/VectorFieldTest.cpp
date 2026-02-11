@@ -141,6 +141,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         REQUIRE(loaded == vector_field_2d_1);
     }
 }
+
 TEST_CASE("VectorField3D Operations", "[vector]")
 {
     VectorField3D<double> vector_field_3d_1(3, 3, 3);

@@ -55,6 +55,8 @@ namespace vfFields
 
         T operator()(double x, double y) const;
 
+        T& operator()(size_t x, size_t y) const;
+
         bool operator==(const AbstractField2D& field) const
         {
             if (!(this->x_size == field.x_size && this->y_size == field.y_size))
@@ -126,6 +128,11 @@ namespace vfFields
         return os;
     }
 
+    template <typename T>
+    T& AbstractField2D<T>::operator()(const size_t x, const size_t y) const
+    {
+        return inner_data[x * y_size + y];
+    }
 
     template <typename T>
     T AbstractField2D<T>::operator()(const double x, const double y) const
@@ -150,8 +157,8 @@ namespace vfFields
             (1 - fx) * fy * v01;
     }
 
-template <typename T>
-AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) const
+    template <typename T>
+    AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) const
     {
         AbstractField2D newField(this->x_size, this->y_size);
         // Assuming both fields have the same dimensions
@@ -185,6 +192,5 @@ AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) c
 
         return newField;
     }
-
 }
 #endif //ABSTRACTFIELD_H

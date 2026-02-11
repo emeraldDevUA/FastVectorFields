@@ -28,7 +28,7 @@ namespace vfFields
         {
         }
 
-        VectorField3D(size_t x_size, size_t y_size, size_t z_size )
+        VectorField3D(size_t x_size, size_t y_size, size_t z_size)
             : AbstractField3D<Vector3D<T>>(x_size, y_size, z_size)
         {
         }
@@ -36,19 +36,17 @@ namespace vfFields
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
-
             for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
             {
-                for (size_t j = 1; j < field.getGridSizeY() - 1 ; ++j)
+                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
                 {
-                    for (size_t k = 1; k < field.getGridSizeZ() - 1 ; ++k)
+                    for (size_t k = 1; k < field.getGridSizeZ() - 1; ++k)
                     {
                         this->setValue(i, j, k, field.gradient(i, j, k, 1));
                     }
                 }
             }
         }
-
 
 
         T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
@@ -68,7 +66,6 @@ namespace vfFields
 
             return du_dx + dv_dy + dw_dz;
         }
-
 
 
         Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
@@ -92,14 +89,14 @@ namespace vfFields
             T du_dy = (Fy_p.x - Fy_m.x) / (2 * eps);
 
             return {
-                dw_dy - dv_dz,   // curl.x
-                du_dz - dw_dx,   // curl.y
-                dv_dx - du_dy    // curl.z
+                dw_dy - dv_dz, // curl.x
+                du_dz - dw_dx, // curl.y
+                dv_dx - du_dy // curl.z
             };
         }
 
         void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
-            const T rbf_epsilon = static_cast<T>(0.8))
+                                   const T rbf_epsilon = static_cast<T>(0.8))
         {
             auto row_size = this->x_size;
             auto column_size = this->y_size;
@@ -130,7 +127,8 @@ namespace vfFields
                 }
             }
 
-            if (xValues.size() < 3){
+            if (xValues.size() < 3)
+            {
                 throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
             }
 
@@ -138,13 +136,12 @@ namespace vfFields
             RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon);
             RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon);
 
-                    for (size_t k = 0; k < matrix_depth; ++k)
-                    {
-            for (size_t i = 0; i < row_size; ++i)
+            for (size_t k = 0; k < matrix_depth; ++k)
             {
-                for (size_t j = 0; j < column_size; ++j)
+                for (size_t i = 0; i < row_size; ++i)
                 {
-
+                    for (size_t j = 0; j < column_size; ++j)
+                    {
                         auto x_coord = static_cast<T>(i);
                         auto y_coord = static_cast<T>(j);
                         auto z_coord = static_cast<T>(k);
@@ -156,7 +153,7 @@ namespace vfFields
                         Vector3D<T> value(vectorX, vectorY, vectorZ);
                         value.normalize();
 
-                        this->setValue(i, j,k, value);
+                        this->setValue(i, j, k, value);
                     }
                 }
             }

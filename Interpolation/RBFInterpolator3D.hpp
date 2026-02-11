@@ -58,7 +58,7 @@ namespace vfInterpolation
         // Inverse multiquadric RBF
         T phi(T r) const
         {
-            return T(1) / std::sqrt(r*r + eps*eps);
+            return T(1) / std::sqrt(r * r + eps * eps);
         }
 
         static T distance3D(
@@ -68,7 +68,7 @@ namespace vfInterpolation
             T dx = x1 - x2;
             T dy = y1 - y2;
             T dz = z1 - z2;
-            return std::sqrt(dx*dx + dy*dy + dz*dz);
+            return std::sqrt(dx * dx + dy * dy + dz * dz);
         }
 
         void computeWeights()
@@ -97,7 +97,6 @@ namespace vfInterpolation
 
             solveLinearSystem(A, b, weights);
         }
-
     };
 } // vfInterpolation
 

@@ -98,7 +98,7 @@ namespace vfFields
 
 
         void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
-            const T rbf_epsilon = static_cast<T>(0.8))
+                                   const T rbf_epsilon = static_cast<T>(0.8))
         {
             auto row_size = this->x_size;
             auto column_size = this->y_size;
@@ -107,7 +107,7 @@ namespace vfFields
             std::vector<Vector3D<T>> xValues;
             std::vector<Vector3D<T>> yValues;
 
-            for (size_t i = 0; i <row_size; ++i)
+            for (size_t i = 0; i < row_size; ++i)
             {
                 for (size_t j = 0; j < column_size; ++j)
                 {
@@ -122,7 +122,8 @@ namespace vfFields
                 }
             }
 
-            if (xValues.size() < 3){
+            if (xValues.size() < 3)
+            {
                 throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
             }
 

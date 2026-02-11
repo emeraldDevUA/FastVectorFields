@@ -95,13 +95,12 @@ namespace vfMath
     std::ostream& operator<<(std::ostream& os, const Vector2D<T>& vector)
     {
         os << "{"
-           << "\"x\": " << vector.x
-           << ", \"y\": " << vector.y
-           << "}";
+            << "\"x\": " << vector.x
+            << ", \"y\": " << vector.y
+            << "}";
 
         return os;
     }
-
 }
 
 #endif //VECTOR2D_H

@@ -58,6 +58,7 @@ namespace vfFields
         [[nodiscard]] size_t getGridSizeZ() const;
 
         T operator()(double x, double y, double z) const;
+        T& operator()(size_t x, size_t y, size_t z) const;
 
         bool operator==(const AbstractField3D& field) const
         {
@@ -134,7 +135,11 @@ namespace vfFields
         }
         return os;
     }
-
+    template <typename T>
+    T& AbstractField3D<T>::operator()(const size_t x, const size_t y, const size_t z) const
+    {
+        return inner_data[x * y_size + y + (x_size * y_size) * z];
+    };
 
     template <typename T>
     T AbstractField3D<T>::operator()(const double x, const double y, const double z) const
@@ -178,7 +183,7 @@ namespace vfFields
     }
 
     template <typename T>
-AbstractField3D<T> AbstractField3D<T>::operator+(const AbstractField3D& field) const
+    AbstractField3D<T> AbstractField3D<T>::operator+(const AbstractField3D& field) const
     {
         AbstractField3D newField(this->x_size, this->y_size, this->z_size);
         // Assuming both fields have the same dimensions

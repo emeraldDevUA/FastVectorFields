@@ -1,4 +1,3 @@
-
 #include "../Vectors/Vector2D.hpp"
 #include "../Vectors/Vector3D.hpp"
 
@@ -51,6 +50,7 @@ int main()
 
     VectorField2D<double> interpolation_target(32, 32);
 
+
     interpolation_target.setValue(0, 0, {1.0, 0.0});
     interpolation_target.setValue(31, 31, {-1.0, 0});
     interpolation_target.setValue(20, 17, {0.5, -0.5});
@@ -63,8 +63,9 @@ int main()
     try
     {
         interpolation_target.fillWithInterpolation();
-    }   catch (const std::logic_error& e) {
-
+    }
+    catch (const std::logic_error& e)
+    {
         std::cerr << "exception caught: " << e.what() << '\n';
     }
 
@@ -73,12 +74,13 @@ int main()
     std::cout << interpolation_target << std::endl;
 
 
-    ScalarField3D<double> scalar_field_3d(32, 32 , 32);
+    ScalarField3D<double> scalar_field_3d(32, 32, 32);
 
-    scalar_field_3d.fill([](const double x, const double y, const double z) {
-            const double r = std::sqrt(x * x + y * y + z * z);
-            const double theta = std::atan2(y, x);
-            return std::sin(8 * M_PI * r + 4 * theta);
+    scalar_field_3d.fill([](const double x, const double y, const double z)
+    {
+        const double r = std::sqrt(x * x + y * y + z * z);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
 
@@ -90,9 +92,9 @@ int main()
     //
     // serialize(vector_field_3d, "vector_field_3d", "vector_field");
 
-    vector_field_3d.setValue(0, 0, 0,{1.0, 0.0, 0});
+    vector_field_3d.setValue(0, 0, 0, {1.0, 0.0, 0});
     vector_field_3d.setValue(31, 31, 31, {-1.0, 0, 0});
-    vector_field_3d.setValue(20, 17, 20,  {0.5, -0.5, -0.5});
+    vector_field_3d.setValue(20, 17, 20, {0.5, -0.5, -0.5});
     vector_field_3d.setValue(13, 12, 12, {-0.5, 0.5, 0.5});
     //
 

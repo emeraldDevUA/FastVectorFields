@@ -47,7 +47,7 @@ all the mentioned above classes.
 #include "../ScalarFields/ScalarField2D.h"
 #include "../FieldBase/AbstractField2D.h"
 #include "../Vectors/Vector2D.h"
-#include  "../Vectors/Vector3D.h"
+#include "../Vectors/Vector3D.h"
 
 using vfMath::Vector2D;
 
@@ -88,7 +88,7 @@ fields. They can be visualized using matplotlib or plotly charts.
 
 $$
 \begin{aligned}
-f(x,y) &= \sin\!\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
+f(x,y) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
 (x,y) &\in [-1,1] \times [-1,1]
 \end{aligned}
 $$
@@ -121,13 +121,26 @@ The FastVectorFields library supports interpolation in two different contexts:
 
 Uses bilinear or trilinear interpolation to sample between the tiles.
 
-```cpp
-VectorField2D<double> a(3, 3);
+#### For 2D:
 
-a.setValue(0, 0, {1.0, 1.0});
-a.setValue(1, 1, {-1.0, -1.0});
+```cpp
+VectorField2D<double> vector_field(3, 3);
+
+vector_field.setValue(0, 0, {1.0, 1.0});
+vector_field.setValue(1, 1, {-1.0, -1.0});
 
 auto result = a(0.5, 0.5);
+ ```
+
+#### For 3D:
+
+```cpp
+VectorField3D<double> vector_field(3, 3, 3);
+
+vector_field.setValue(0, 0, 0,{1.0, 1.0, 1.0});
+vector_field.setValue(1, 1, 0, {-1.0, -1.0, -1.0});
+
+auto result = a(0.5, 0.5, 0.5);
  ```
 
 Use case: getting additional samples between the tiles.
@@ -136,15 +149,29 @@ Use case: getting additional samples between the tiles.
 
 Uses RBF-interpolation to fill the data structure with approximated vectors.
 ```cpp
-VectorField2D<double> a(16, 16);
+VectorField2D<double> vector_field(16, 16);
 
 // Setting only 3 vectors, the rest will be filled with interpolation.
-a.setValue(0, 0, {1.0, 0.0});
-a.setValue(3, 3, {-1.0, 0});
-a.setValue(1, 1, {0.5, -0.5});
+vector_field.setValue(0, 0, {1.0, 0.0});
+vector_field.setValue(3, 3, {-1.0, 0.0});
+vector_field.setValue(1, 1, {0.5, -0.5});
+
+vector_field.fillWithInterpolation();
+```
+
+#### For 3D:
+
+```cpp
+VectorField3D<double> vector_field(16, 16, 16);
+
+// Setting only 3 vectors, the rest will be filled with interpolation.
+vector_field.setValue(0, 0, 0, {1.0, 0.0, -0.5});
+vector_field.setValue(3, 3, 3, {-1.0, 0.0, 0.5});
+vector_field.setValue(1, 1, 1, {0.5, -0.5, 0.5});
 
 a.fillWithInterpolation();
 ```
+
 Use case: filling in the gaps between the vectors(at least 3).
 
 The purpose of this method is to produce vector fields similar to this one based on a limited number of entries.

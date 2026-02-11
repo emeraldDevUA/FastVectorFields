@@ -22,7 +22,7 @@ void solveLinearSystem(
     {
         // Pivot
         T pivot = A[i][i];
-        if(std::abs(pivot) < 1e-12)
+        if (std::abs(pivot) < 1e-12)
         {
             throw std::runtime_error("Matrix is singular or nearly singular");
         }

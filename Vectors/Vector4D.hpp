@@ -59,7 +59,7 @@ namespace vfMath
 
         Vector4D operator*(const T multiplier) const
         {
-            return Vector4D(multiplier * x, multiplier * y, multiplier * z,  multiplier * w);
+            return Vector4D(multiplier * x, multiplier * y, multiplier * z, multiplier * w);
         }
 
         Vector4D operator/(const T divisor) const
@@ -102,16 +102,15 @@ namespace vfMath
     std::ostream& operator<<(std::ostream& os, const Vector4D<T>& vector)
     {
         os << "{"
-           << "\"x\": " << vector.x
-           << ", \"y\": " << vector.y
-           << ", \"z\": " << vector.z
-           << ", \"w\": " << vector.w
-           << "}";
+            << "\"x\": " << vector.x
+            << ", \"y\": " << vector.y
+            << ", \"z\": " << vector.z
+            << ", \"w\": " << vector.w
+            << "}";
 
         return os;
     }
 };
-
 
 
 #endif //FASTVECTORFIELDS_VECTOR4D_H

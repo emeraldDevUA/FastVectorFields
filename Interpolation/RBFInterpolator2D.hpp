@@ -81,7 +81,6 @@ namespace vfInterpolation
 
             solveLinearSystem(A, b, weights);
         }
-
     };
 }
 
