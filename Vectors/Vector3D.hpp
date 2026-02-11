@@ -22,6 +22,7 @@ namespace vfMath
         T x{};
         T y{};
         T z{};
+
         Vector3D() = default;
 
         Vector3D(T x, T y, T z) : x(x), y(y), z(z)
@@ -30,7 +31,7 @@ namespace vfMath
 
         T length() const // ✅ const-correct
         {
-            return std::sqrt(x * x + y * y, z * z);
+            return std::sqrt(x * x + y * y + z * z);
         }
 
         void normalize()
@@ -97,10 +98,10 @@ namespace vfMath
     std::ostream& operator<<(std::ostream& os, const Vector3D<T>& vector)
     {
         os << "{"
-            << "x: " << vector.x
-            << ", y: " << vector.y
-            << ", z: " << vector.z
-            << "} ";
+            << "\"x\": " << vector.x
+            << ", \"y\": " << vector.y
+            << ", \"z\": " << vector.z
+            << "}";
 
         return os;
     }

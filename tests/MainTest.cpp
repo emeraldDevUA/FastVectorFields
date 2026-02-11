@@ -1,88 +1,109 @@
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
+
+#include "../FieldBase/AbstractField2D.hpp"
+#include "../ScalarFields/ScalarField2D.hpp"
+#include "../VectorFields/VectorField2D.hpp"
+
+#include "../ScalarFields/ScalarField3D.hpp"
+#include "../VectorFields/VectorField3D.hpp"
+
 #include <iostream>
 #include <fstream>
-
-#include "../VectorFields/VectorField2D.h"
-#include "../ScalarFields/ScalarField2D.h"
-#include "../FieldBase/AbstractField2D.h"
-#include "../Vectors/Vector2D.h"
-#include  "../Vectors/Vector3D.h"
-
-#include  "../Interpolation/RBFInterpolator2D.h"
-
 #include <cereal/types/memory.hpp>
 
-using namespace vfMath;
+using vfMath::Vector2D;
+
+using vfFields::VectorField2D;
+using vfFields::ScalarField2D;
+
+using vfFields::VectorField3D;
+
+using vfFields::ScalarField3D;
 
 
+void serialize(const auto& scalar_field, const std::string& file_name, const std::string& type)
+{
+    std::ofstream os1(file_name + ".json", std::ios::binary);
+    cereal::JSONOutputArchive archive1(os1);
+
+    archive1(cereal::make_nvp<>(type, scalar_field));
+}
 
 int main()
 {
-    ScalarField2D<double> scalar_field(100, 100);
+    ScalarField2D<double> scalar_field(64, 64);
 
-    scalar_field.fill([](double x, double y)
+    scalar_field.fill([](const double x, const double y)
     {
-         double r = std::sqrt(x*x + y*y);
-         double theta = std::atan2(y, x);
-         return std::sin(8 * M_PI * r + 4 * theta);
+        const double r = std::sqrt(x * x + y * y);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0);
-
-    // std::cout << scalar_field << std::endl;
 
     VectorField2D vector_field(scalar_field);
     vector_field.normalize();
-    // std::ofstream file("data.txt");
-    //
-    // //file << vector_field;
-    //
-    // for (int i = 0; i < 20; ++i)
-    // {
-    //     for (int j = 0; j < 20; ++j)
-    //     {
-    //         double div = vector_field.curl(i, j);
-    //         std::cout << div << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+
+    serialize(scalar_field, "scalar_field", "scalar_field");
+
+    serialize(vector_field, "vector_field", "vector_field");
+
+    VectorField2D<double> interpolation_target(32, 32);
 
 
-    // size_t vector_field_size = 20;
-    // VectorField2D<double> new_vector_field_2d(vector_field_size, vector_field_size);
-    //
-    // new_vector_field_2d.setValue(10, 0, {0.0, 1.0});
-    // new_vector_field_2d.setValue(10, 19, {0.0, -1.0});
-    // new_vector_field_2d.setValue(0, 10, {1.0, 0.0});
-    // new_vector_field_2d.setValue(19, 10, {-1.0, 0.0});
-    //
-    //
-    // new_vector_field_2d.fillWithInterpolation();
-    // new_vector_field_2d.normalize();
-    // //file << new_vector_field_2d;
-    //
-    // VectorField2D<double> a(16, 16);
-    //
-    // a.setValue(0, 0, {1.0, 0.0});
-    // a.setValue(3, 3, {-1.0, 0});
-    // a.setValue(1, 1, {0.5, -0.5});
-    //
-    // a.fillWithInterpolation();
-    //
-    // file << a;
+    interpolation_target.setValue(0, 0, {1.0, 0.0});
+    interpolation_target.setValue(31, 31, {-1.0, 0});
+    interpolation_target.setValue(20, 17, {0.5, -0.5});
+    interpolation_target.setValue(13, 12, {-0.5, 0.5});
 
-    // std::ofstream os("vector_field.json", std::ios::binary);
-    // cereal::JSONOutputArchive archive(os);
-    // archive(cereal::make_nvp<>("vector_field", a));
+    interpolation_target.normalize();
+
+    serialize(interpolation_target, "vector_field_poles", "vector_field");
+
+    try
+    {
+        interpolation_target.fillWithInterpolation();
+    }
+    catch (const std::logic_error& e)
+    {
+        std::cerr << "exception caught: " << e.what() << '\n';
+    }
+
+    serialize(interpolation_target, "vector_field_interpolation", "vector_field");
+
+    std::cout << interpolation_target << std::endl;
 
 
-    std::ofstream os1("scalar_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive1(os1);
+    ScalarField3D<double> scalar_field_3d(32, 32, 32);
 
-   archive1(cereal::make_nvp<>("scalar_field", scalar_field));
+    scalar_field_3d.fill([](const double x, const double y, const double z)
+    {
+        const double r = std::sqrt(x * x + y * y + z * z);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
+    }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
 
-    std::ofstream os("vector_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive(os);
-    archive(cereal::make_nvp<>("vector_field", vector_field));
+    size_t n_size = 32;
+    VectorField3D<double> vector_field_3d(32);
+    //vector_field_3d.normalize();
 
+    // serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
+    //
+    // serialize(vector_field_3d, "vector_field_3d", "vector_field");
+
+    vector_field_3d.setValue(0, 0, 0, {1.0, 0.0, 0});
+    vector_field_3d.setValue(31, 31, 31, {-1.0, 0, 0});
+    vector_field_3d.setValue(20, 17, 20, {0.5, -0.5, -0.5});
+    vector_field_3d.setValue(13, 12, 12, {-0.5, 0.5, 0.5});
+    //
+
+    serialize(vector_field_3d, "vector_field_3d_poles", "vector_field");
+    vector_field_3d.normalize();
+    vector_field_3d.fillWithInterpolation();
+    vector_field_3d.normalize();
+
+    serialize(vector_field_3d, "vector_field_3d_interpolation", "vector_field");
 
     return 0;
 }

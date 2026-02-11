@@ -5,7 +5,7 @@
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
 
-#include "../NumericalConstants.h"
+#include "../NumericalConstants.hpp"
 
 #include <limits>
 #include <cmath>
@@ -95,9 +95,9 @@ namespace vfMath
     std::ostream& operator<<(std::ostream& os, const Vector2D<T>& vector)
     {
         os << "{"
-            << "x: " << vector.x
-            << ", y: " << vector.y
-            << "} ";
+            << "\"x\": " << vector.x
+            << ", \"y\": " << vector.y
+            << "}";
 
         return os;
     }
