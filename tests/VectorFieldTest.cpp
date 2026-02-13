@@ -50,7 +50,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         a.setValue(0, 2, {1.0, 2.0});
         b.setValue(0, 2, {3.0, -2.0});
 
-        auto result = a + b;
+        VectorField2D<double> result = a + b;
 
         REQUIRE(result.getValue(0, 2).x == 4.0);
         REQUIRE(result.getValue(0, 2).y == 0.0);
@@ -78,7 +78,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         a.setValue(0, 0, {1.0, 1.0});
         a.setValue(1, 1, {-1.0, -1.0});
 
-        auto result = a(0.5, 0.5);
+        auto result = a.sample(0.5, 0.5);
         REQUIRE(result == Vector2D<double>(0.0, 0.0));
     }
 
@@ -199,7 +199,7 @@ TEST_CASE("VectorField3D Operations", "[vector]")
         a.setValue(0, 0, 0, {1.0, 1.0, 1.0});
         a.setValue(1, 1, 1, {-1.0, -1.0, -1.0});
 
-        auto result = a(0.5, 0.5, 0.5);
+        auto result = a.sample(0.5, 0.5, 0.5);
         REQUIRE(result == Vector3D<double>(0.0, 0.0, 0.0));
     }
 

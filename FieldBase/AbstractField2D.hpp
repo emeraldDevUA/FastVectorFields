@@ -49,13 +49,13 @@ namespace vfFields
             return inner_data[x * y_size + y];
         }
 
-        size_t getGridSizeX() const;
+        [[nodiscard]] size_t getGridSizeX() const { return x_size; }
+        [[nodiscard]] size_t getGridSizeY() const { return y_size; }
 
-        size_t getGridSizeY() const;
 
-        T operator()(double x, double y) const;
+        T sample(double x, double y) const;
 
-        T& operator()(size_t x, size_t y) const;
+        T& operator()(size_t x, size_t y);
 
         bool operator==(const AbstractField2D& field) const
         {
@@ -76,8 +76,6 @@ namespace vfFields
             return true;
         }
 
-        AbstractField2D operator+(const AbstractField2D& field) const;
-        AbstractField2D operator-(const AbstractField2D& field) const;
 
         template <class Archive>
         void serialize(Archive& archive)
@@ -90,17 +88,6 @@ namespace vfFields
         }
     };
 
-    template <typename T>
-    size_t AbstractField2D<T>::getGridSizeX() const
-    {
-        return x_size;
-    }
-
-    template <typename T>
-    size_t AbstractField2D<T>::getGridSizeY() const
-    {
-        return y_size;
-    }
 
     template <typename T>
     std::ostream& operator<<(std::ostream& os, const AbstractField2D<T>& m)
@@ -129,13 +116,13 @@ namespace vfFields
     }
 
     template <typename T>
-    T& AbstractField2D<T>::operator()(const size_t x, const size_t y) const
+    T& AbstractField2D<T>::operator()(const size_t x, const size_t y)
     {
         return inner_data[x * y_size + y];
     }
 
     template <typename T>
-    T AbstractField2D<T>::operator()(const double x, const double y) const
+    T AbstractField2D<T>::sample(const double x, const double y) const
     {
         const auto ix = static_cast<size_t>(std::floor(x));
         const auto iy = static_cast<size_t>(std::floor(y));
@@ -155,42 +142,6 @@ namespace vfFields
             fx * (1 - fy) * v10 +
             fx * fy * v11 +
             (1 - fx) * fy * v01;
-    }
-
-    template <typename T>
-    AbstractField2D<T> AbstractField2D<T>::operator+(const AbstractField2D& field) const
-    {
-        AbstractField2D newField(this->x_size, this->y_size);
-        // Assuming both fields have the same dimensions
-        for (size_t i = 0; i < this->x_size; i++)
-        {
-            T sum;
-            for (size_t j = 0; j < this->y_size; ++j)
-            {
-                sum = this->getValue(i, j) + field.getValue(i, j);
-                newField.setValue(i, j, sum);
-            }
-        }
-
-        return newField;
-    }
-
-    template <typename T>
-    AbstractField2D<T> AbstractField2D<T>::operator-(const AbstractField2D& field) const
-    {
-        AbstractField2D newField(this->x_size, this->y_size);
-        // Assuming both fields have the same dimensions
-        for (size_t i = 0; i < this->x_size; i++)
-        {
-            T difference;
-            for (size_t j = 0; j < this->y_size; ++j)
-            {
-                difference = this->getValue(i, j) - field.getValue(i, j);
-                newField.setValue(i, j, difference);
-            }
-        }
-
-        return newField;
     }
 }
 #endif //ABSTRACTFIELD_H

@@ -151,11 +151,8 @@ namespace vfFields
 
         void normalize()
         {
-            const size_t full_size = this->getGridSizeX() * this->getGridSizeY();
-            for (size_t i = 0; i < full_size; ++i)
-            {
-                this->inner_data[i].normalize();
-            }
+            for (auto& v : this->inner_data)
+                v.normalize();
         }
 
         VectorField2D operator+(const VectorField2D& field) const

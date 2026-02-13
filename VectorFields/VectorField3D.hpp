@@ -163,10 +163,60 @@ namespace vfFields
         void normalize()
         {
             for (auto& v : this->inner_data)
-            {
                 v.normalize();
-            }
         }
+
+        VectorField3D operator+(const VectorField3D& field) const
+        {
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
+            auto slice_depth = this->z_size;
+
+            VectorField3D newField(row_size, column_size, slice_depth);
+            // Assuming both fields have the same dimensions
+            for (size_t i = 0; i < row_size; i++)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    for (size_t k = 0; k < slice_depth; ++k)
+                    {
+                        size_t index = i * column_size + j + (row_size * column_size) * k;
+
+                        newField.inner_data[index] =
+                            this->inner_data[index] + field.inner_data[index];
+                    }
+                }
+            }
+
+            return newField;
+        }
+
+
+        VectorField3D operator-(const VectorField3D& field) const
+        {
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
+            auto slice_depth = this->z_size;
+
+            VectorField3D newField(row_size, column_size, slice_depth);
+            // Assuming both fields have the same dimensions
+            for (size_t i = 0; i < row_size; i++)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    for (size_t k = 0; k < slice_depth; ++k)
+                    {
+                        size_t index = i * column_size + j + (row_size * column_size) * k;
+
+                        newField.inner_data[index] =
+                            this->inner_data[index] - field.inner_data[index];
+                    }
+                }
+            }
+
+            return newField;
+        }
+
     };
 } // vfFields
 

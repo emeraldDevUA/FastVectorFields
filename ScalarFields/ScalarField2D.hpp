@@ -57,6 +57,44 @@ namespace vfFields
 
             return Vector2D<T>(static_cast<T>(dx), static_cast<T>(dy));
         }
+
+        ScalarField2D operator+(const ScalarField2D& field) const
+        {
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
+
+            ScalarField2D newField(row_size, column_size);
+            // Assuming both fields have the same dimensions
+            for (size_t i = 0; i < row_size; i++)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    newField.inner_data[i * row_size + j] =
+                        this->inner_data[i * row_size + j] + field.inner_data[i * row_size + j];
+                }
+            }
+
+            return newField;
+        }
+
+        ScalarField2D operator-(const ScalarField2D& field) const
+        {
+            auto row_size = this->x_size;
+            auto column_size = this->y_size;
+
+            ScalarField2D newField(row_size, column_size);
+            // Assuming both fields have the same dimensions
+            for (size_t i = 0; i < row_size; i++)
+            {
+                for (size_t j = 0; j < column_size; ++j)
+                {
+                    newField.inner_data[i * row_size + j] =
+                        this->inner_data[i * row_size + j] - field.inner_data[i * row_size + j];
+                }
+            }
+
+            return newField;
+        }
     };
 }
 #endif //SCALARFIELD2D_H

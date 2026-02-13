@@ -18,7 +18,6 @@ using vfFields::VectorField2D;
 using vfFields::ScalarField2D;
 
 using vfFields::VectorField3D;
-
 using vfFields::ScalarField3D;
 
 
