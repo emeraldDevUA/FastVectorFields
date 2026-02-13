@@ -11,7 +11,6 @@ add_library(FastVectorLib
         VectorFields/VectorField2D.hpp
         Vectors/Vector2D.hpp
         ScalarFields/ScalarField2D.hpp
-        NumericalConstants.hpp
         Vectors/Vector3D.hpp
         Interpolation/RBFInterpolator2D.hpp
         FieldBase/AbstractField3D.cpp

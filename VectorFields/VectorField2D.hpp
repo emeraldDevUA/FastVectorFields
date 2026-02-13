@@ -33,9 +33,9 @@ namespace vfFields
         explicit VectorField2D(const ScalarField2D<T>& field)
             : AbstractField2D<Vector2D<T>>(field.getGridSizeX(), field.getGridSizeY())
         {
-            for (size_t i = 1; i + 1 < field.getGridSizeX(); ++i)
+            for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
             {
-                for (size_t j = 1; j + 1 < field.getGridSizeY(); ++j)
+                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
                 {
                     this->setValue(i, j, field.gradient(i, j, 1));
                 }
@@ -149,10 +149,10 @@ namespace vfFields
         }
 
 
-        void normalize()
+        void normalize(T eps = static_cast<T>(1e-9))
         {
             for (auto& v : this->inner_data)
-                v.normalize();
+                v.normalize(eps);
         }
 
         VectorField2D operator+(const VectorField2D& field) const

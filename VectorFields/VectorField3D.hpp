@@ -160,10 +160,10 @@ namespace vfFields
         }
 
 
-        void normalize()
+        void normalize(T eps = static_cast<T>(1e-9))
         {
             for (auto& v : this->inner_data)
-                v.normalize();
+                v.normalize(eps);
         }
 
         VectorField3D operator+(const VectorField3D& field) const
