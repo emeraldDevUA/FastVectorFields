@@ -12,10 +12,10 @@ A vector field is a common concept in physical/mathematical modeling
 that describes an object that assigns a point in space to a vector value.
 
 #### For 2D:
-$` \vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j`$
+$`\vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j`$
 
 #### For 3D: 
-$` \vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k`$
+$`\vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k`$
 
 
 ### What data structures do you have to deal with? 
@@ -60,7 +60,6 @@ using vfFields::ScalarField2D;
 using vfFields::VectorField3D;
 using vfFields::ScalarField3D;
 
-
 template <typename T>
 void serializeToJson(const T& object, const std::string& filename, const std::string& name)
 {
@@ -77,9 +76,7 @@ void serializeToJson(const T& object, const std::string& filename, const std::st
 
 int main()
 {
-
     // 2D Fields
-
     ScalarField2D<double> scalar_field(128, 128);
 
     scalar_field.fill([](const double x, const double y)
@@ -97,7 +94,6 @@ int main()
     serializeToJson(vector_field, "vector_field.json", "vector_field");
 
     // 3D Fields
-    
     ScalarField3D<double> scalar_field3D(32, 32, 32);
 
     scalar_field3D.fill([](const double x, const double y, const double z)
@@ -163,8 +159,8 @@ Uses bilinear or trilinear interpolation to sample between the tiles.
 ```cpp
 VectorField2D<double> vector_field(3, 3);
 
-vector_field.setValue(0, 0, {1.0, 1.0});
-vector_field.setValue(1, 1, {-1.0, -1.0});
+vector_field(0, 0) = {1.0, 1.0};
+vector_field(1, 1) = {-1.0, -1.0};
 
 auto result = a.sample(0.5, 0.5);
  ```
@@ -174,8 +170,8 @@ auto result = a.sample(0.5, 0.5);
 ```cpp
 VectorField3D<double> vector_field(3, 3, 3);
 
-vector_field.setValue(0, 0, 0,{1.0, 1.0, 1.0});
-vector_field.setValue(1, 1, 0, {-1.0, -1.0, -1.0});
+vector_field(0, 0, 0) = {1.0, 1.0, 1.0};
+vector_field(1, 1, 1) = {-1.0, -1.0, -1.0};
 
 auto result = a.sample(0.5, 0.5, 0.5);
  ```
@@ -189,9 +185,9 @@ Uses RBF-interpolation to fill the data structure with approximated vectors.
 VectorField2D<double> vector_field(16, 16);
 
 // Setting only 3 vectors, the rest will be filled with interpolation.
-vector_field.setValue(0, 0, {1.0, 0.0});
-vector_field.setValue(3, 3, {-1.0, 0.0});
-vector_field.setValue(1, 1, {0.5, -0.5});
+vector_field(0, 0) = {1.0, 0.0};
+vector_field(3, 3) = {-1.0, 0.0};
+vector_field(1, 1) = {0.5, -0.5};
 
 vector_field.fillWithInterpolation();
 ```
@@ -202,9 +198,9 @@ vector_field.fillWithInterpolation();
 VectorField3D<double> vector_field(16, 16, 16);
 
 // Setting only 3 vectors, the rest will be filled with interpolation.
-vector_field.setValue(0, 0, 0, {1.0, 0.0, -0.5});
-vector_field.setValue(3, 3, 3, {-1.0, 0.0, 0.5});
-vector_field.setValue(1, 1, 1, {0.5, -0.5, 0.5});
+vector_field(0, 0, 0) = {1.0, 0.0, -0.5};
+vector_field(3, 3, 3) = {-1.0, 0.0, 0.5};
+vector_field(1, 1, 1) = {0.5, -0.5, 0.5};
 
 a.fillWithInterpolation();
 ```
