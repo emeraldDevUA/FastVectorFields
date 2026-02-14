@@ -77,8 +77,8 @@ if (MSVC)
     target_compile_options(UnitTests PRIVATE /O2)
     target_compile_options(FastVectorLib PRIVATE /O2)
 else()
-    target_compile_options(UnitTests PRIVATE -O3 -march=native)
-    target_compile_options(FastVectorLib PRIVATE -O3 -march=native)
+    target_compile_options(UnitTests PRIVATE -O3 -march=native -ffast-math)
+    target_compile_options(FastVectorLib PRIVATE -O3 -march=native -ffast-math)
 endif()
 
 # 5. Integrate with CTest/IDE Test Explorers

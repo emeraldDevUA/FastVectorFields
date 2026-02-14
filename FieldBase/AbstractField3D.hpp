@@ -179,7 +179,6 @@ namespace vfFields
         // interpolate along z
         return c0 * (1 - fz) + c1 * fz;
     }
-
 }
 
 #endif //FASTVECTORFIELDS_ABSTRACTFIELD3D_H

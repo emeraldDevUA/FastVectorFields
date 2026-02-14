@@ -157,38 +157,38 @@ namespace vfFields
 
         VectorField2D operator+(const VectorField2D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for addition.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
 
             VectorField2D newField(row_size, column_size);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
-            {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    newField.inner_data[i * row_size + j] =
-                        this->inner_data[i * row_size + j] + field.inner_data[i * row_size + j];
-                }
-            }
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
             return newField;
         }
 
         VectorField2D operator-(const VectorField2D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
 
             VectorField2D newField(row_size, column_size);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
-            {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    newField.inner_data[i * row_size + j] =
-                        this->inner_data[i * row_size + j] - field.inner_data[i * row_size + j];
-                }
-            }
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 
             return newField;
         }

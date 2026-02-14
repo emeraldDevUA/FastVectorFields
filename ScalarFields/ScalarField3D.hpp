@@ -123,8 +123,6 @@ namespace vfFields
 
             return newField;
         }
-
-
     };
 }
 #endif //FASTVECTORFIELDS_SCALARFIELD3D_H
