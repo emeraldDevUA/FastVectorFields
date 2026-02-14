@@ -75,25 +75,24 @@ namespace vfFields
 
         ScalarField3D operator+(const ScalarField3D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
-            auto slice_depth = this->z_size;
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
 
-            ScalarField3D newField(row_size, column_size, slice_depth);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
             {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    for (size_t k = 0; k < slice_depth; ++k)
-                    {
-                        size_t index = i * column_size + j + (row_size * column_size) * k;
-
-                        newField.inner_data[index] =
-                            this->inner_data[index] + field.inner_data[index];
-                    }
-                }
+                throw std::out_of_range("Field dimensions don't match for addition.");
             }
+
+            ScalarField3D newField(x_size, y_size, z_size);
+
+            const size_t full_size = x_size * y_size * z_size;
+
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
             return newField;
         }
@@ -101,25 +100,24 @@ namespace vfFields
 
         ScalarField3D operator-(const ScalarField3D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
-            auto slice_depth = this->z_size;
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
 
-            ScalarField3D newField(row_size, column_size, slice_depth);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
+
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
             {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    for (size_t k = 0; k < slice_depth; ++k)
-                    {
-                        size_t index = i * column_size + j + (row_size * column_size) * k;
-
-                        newField.inner_data[index] =
-                            this->inner_data[index] - field.inner_data[index];
-                    }
-                }
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
             }
+
+            const size_t full_size = x_size * y_size * z_size;
+
+            ScalarField3D newField(x_size, y_size, z_size);
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 
             return newField;
         }

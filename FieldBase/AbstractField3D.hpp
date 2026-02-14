@@ -51,11 +51,11 @@ namespace vfFields
             return inner_data[x * y_size + y + (x_size * y_size) * z];
         }
 
-        [[nodiscard]] size_t getGridSizeX() const;
+        [[nodiscard]] size_t getGridSizeX() const { return x_size; }
 
-        [[nodiscard]] size_t getGridSizeY() const;
+        [[nodiscard]] size_t getGridSizeY() const { return y_size; }
 
-        [[nodiscard]] size_t getGridSizeZ() const;
+        [[nodiscard]] size_t getGridSizeZ() const { return z_size; }
 
         T sample(double x, double y, double z) const;
         T& operator()(size_t x, size_t y, size_t z);
@@ -92,24 +92,6 @@ namespace vfFields
             );
         }
     };
-
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeX() const
-    {
-        return x_size;
-    }
-
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeY() const
-    {
-        return y_size;
-    }
-
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeZ() const
-    {
-        return z_size;
-    }
 
 
     template <typename T>
