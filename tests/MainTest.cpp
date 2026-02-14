@@ -9,7 +9,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <numbers>
 #include <cereal/types/memory.hpp>
+
 
 using vfMath::Vector2D;
 
@@ -65,8 +67,8 @@ int main()
     vector_field.normalize();
 
     // Serialize using the new function
-    serializeToJson(scalar_field, "scalar_field3D.json", "scalar_field");
-    serializeToJson(vector_field, "vector_field3D.json", "vector_field");
+    serializeToJson(vector_field3D, "scalar_field3D.json", "scalar_field");
+    serializeToJson(vector_field3D, "vector_field3D.json", "vector_field");
 
     return 0;
 }

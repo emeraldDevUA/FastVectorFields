@@ -70,12 +70,13 @@ add_executable(UnitTests tests/VectorTest.cpp
         Interpolation/RBFInterpolator3D.hpp
         Interpolation/Solvers.hpp
         Vectors/Vector4D.hpp)
+
 target_link_libraries(UnitTests PRIVATE FastVectorLib Catch2::Catch2WithMain)
 target_include_directories(UnitTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ExternalLibs/include)
 
 if (MSVC)
-    target_compile_options(UnitTests PRIVATE /O2)
-    target_compile_options(FastVectorLib PRIVATE /O2)
+    target_compile_options(UnitTests PRIVATE /O2 )
+    target_compile_options(FastVectorLib PRIVATE /O2 )
 else()
     target_compile_options(UnitTests PRIVATE -O3 -march=native -ffast-math)
     target_compile_options(FastVectorLib PRIVATE -O3 -march=native -ffast-math)
