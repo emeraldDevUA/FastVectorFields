@@ -49,7 +49,7 @@ namespace vfFields
         }
 
 
-        Vector2D<T> gradient(T x, T y, T epsilon) const
+        Vector2D<T> gradient(T x, T y, T epsilon = static_cast<T>(1)) const
         {
             // other derivative type
             double dx = (this->getValue(x + epsilon, y) - this->getValue(x - epsilon, y)) / (2.0 * epsilon);

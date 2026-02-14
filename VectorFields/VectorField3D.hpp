@@ -49,7 +49,7 @@ namespace vfFields
         }
 
 
-        T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
+        T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1)) const
         {
             const auto& Fx_p = this->getValue(i + 1, j, k);
             const auto& Fx_m = this->getValue(i - 1, j, k);
@@ -68,7 +68,7 @@ namespace vfFields
         }
 
 
-        Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
+        Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1)) const
         {
             const auto& Fx_p = this->getValue(i + 1, j, k);
             const auto& Fx_m = this->getValue(i - 1, j, k);

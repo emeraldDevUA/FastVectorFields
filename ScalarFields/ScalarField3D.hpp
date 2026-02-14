@@ -63,7 +63,7 @@ namespace vfFields
         }
 
 
-        Vector3D<T> gradient(T x, T y, T z, T epsilon = static_cast<T>(1e-6)) const
+        Vector3D<T> gradient(T x, T y, T z, T epsilon = static_cast<T>(1)) const
         {
             // other derivative type
             double dx = (this->getValue(x + epsilon, y, z) - this->getValue(x - epsilon, y, z)) / (2.0 * epsilon);

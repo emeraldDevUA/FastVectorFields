@@ -71,29 +71,24 @@ namespace vfFields
             }
         }
 
-        T divergence(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
+        T divergence(size_t i, size_t j, T eps = static_cast<T>(1)) const
         {
             // Assuming your class provides access to u(i,j) and v(i,j)
             // You might need to adapt these if your storage is different
 
             //assume that u(i, j) is this(i, j).x and v(i, j) is this(i, j).y
-
-            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
-
+            T du_dx = (this->getValue(i + eps, j).x - this->getValue(i - eps, j).x) / 2.0;
+            T dv_dy = (this->getValue(i, j + eps).y - this->getValue(i, j - eps).y) / 2.0;
             return du_dx + dv_dy;
         }
 
 
-        T curl(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
+        T curl(size_t i, size_t j, T eps = static_cast<T>(1)) const
         {
             // For 2D vector field (u, v), curl = dv/dx - du/dy
-            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
-
-            // Return as Vector2D with curl value in z-component represented as x, y=0
-            // Or if you want the scalar curl, consider changing return type to T
-            return du_dx - dv_dy;
+            T du_dy = (this->getValue(i, j + eps).x - this->getValue(i, j - eps).x) / 2.0;
+            T dv_dx = (this->getValue(i + eps, j).y - this->getValue(i - eps, j).y) / 2.0;
+            return dv_dx - du_dy;
         }
 
 
