@@ -49,7 +49,7 @@ namespace vfFields
         }
 
 
-        T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
+        T divergence(size_t i, size_t j, size_t k, T eps = static_cast<T>(1)) const
         {
             const auto& Fx_p = this->getValue(i + 1, j, k);
             const auto& Fx_m = this->getValue(i - 1, j, k);
@@ -68,7 +68,7 @@ namespace vfFields
         }
 
 
-        Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1e-6)) const
+        Vector3D<T> curl(size_t i, size_t j, size_t k, T eps = static_cast<T>(1)) const
         {
             const auto& Fx_p = this->getValue(i + 1, j, k);
             const auto& Fx_m = this->getValue(i - 1, j, k);
@@ -160,12 +160,58 @@ namespace vfFields
         }
 
 
-        void normalize()
+        void normalize(T eps = static_cast<T>(1e-9))
         {
             for (auto& v : this->inner_data)
+                v.normalize(eps);
+        }
+
+        VectorField3D operator+(const VectorField3D& field) const
+        {
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
+
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
             {
-                v.normalize();
+                throw std::out_of_range("Field dimensions don't match for addition.");
             }
+
+            VectorField3D newField(x_size, y_size, z_size);
+
+            const size_t full_size = x_size * y_size * z_size;
+
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
+
+            return newField;
+        }
+
+
+        VectorField3D operator-(const VectorField3D& field) const
+        {
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
+
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
+            }
+
+            const size_t full_size = x_size * y_size * z_size;
+
+            VectorField3D newField(x_size, y_size, z_size);
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
+
+            return newField;
         }
     };
 } // vfFields

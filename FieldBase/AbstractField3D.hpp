@@ -51,14 +51,14 @@ namespace vfFields
             return inner_data[x * y_size + y + (x_size * y_size) * z];
         }
 
-        [[nodiscard]] size_t getGridSizeX() const;
+        [[nodiscard]] size_t getGridSizeX() const { return x_size; }
 
-        [[nodiscard]] size_t getGridSizeY() const;
+        [[nodiscard]] size_t getGridSizeY() const { return y_size; }
 
-        [[nodiscard]] size_t getGridSizeZ() const;
+        [[nodiscard]] size_t getGridSizeZ() const { return z_size; }
 
-        T operator()(double x, double y, double z) const;
-        T& operator()(size_t x, size_t y, size_t z) const;
+        T sample(double x, double y, double z) const;
+        T& operator()(size_t x, size_t y, size_t z);
 
         bool operator==(const AbstractField3D& field) const
         {
@@ -81,9 +81,6 @@ namespace vfFields
             return true;
         }
 
-        AbstractField3D operator+(const AbstractField3D& field) const;
-        AbstractField3D operator-(const AbstractField3D& field) const;
-
         template <class Archive>
         void serialize(Archive& archive)
         {
@@ -96,24 +93,6 @@ namespace vfFields
         }
     };
 
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeX() const
-    {
-        return x_size;
-    }
-
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeY() const
-    {
-        return y_size;
-    }
-
-    template <typename T>
-    size_t AbstractField3D<T>::getGridSizeZ() const
-    {
-        return z_size;
-    }
-
 
     template <typename T>
     std::ostream& operator<<(std::ostream& os, const AbstractField3D<T>& m)
@@ -122,9 +101,9 @@ namespace vfFields
         {
             os << "z = " << z << '\n';
 
-            for (size_t y = 0; y < m.getGridSizeY(); ++y)
+            for (size_t x = 0; x < m.getGridSizeY(); ++x)
             {
-                for (size_t x = 0; x < m.getGridSizeX(); ++x)
+                for (size_t y = 0; y < m.getGridSizeX(); ++y)
                 {
                     os << m.getValue(x, y, z) << ' ';
                 }
@@ -135,14 +114,15 @@ namespace vfFields
         }
         return os;
     }
+
     template <typename T>
-    T& AbstractField3D<T>::operator()(const size_t x, const size_t y, const size_t z) const
+    T& AbstractField3D<T>::operator()(const size_t x, const size_t y, const size_t z)
     {
         return inner_data[x * y_size + y + (x_size * y_size) * z];
     };
 
     template <typename T>
-    T AbstractField3D<T>::operator()(const double x, const double y, const double z) const
+    T AbstractField3D<T>::sample(const double x, const double y, const double z) const
     {
         const auto ix = static_cast<size_t>(std::floor(x));
         const auto iy = static_cast<size_t>(std::floor(y));
@@ -180,49 +160,6 @@ namespace vfFields
 
         // interpolate along z
         return c0 * (1 - fz) + c1 * fz;
-    }
-
-    template <typename T>
-    AbstractField3D<T> AbstractField3D<T>::operator+(const AbstractField3D& field) const
-    {
-        AbstractField3D newField(this->x_size, this->y_size, this->z_size);
-        // Assuming both fields have the same dimensions
-        for (size_t i = 0; i < this->x_size; i++)
-        {
-            T sum;
-            for (size_t j = 0; j < this->y_size; ++j)
-            {
-                for (size_t k = 0; k < this->z_size; ++k)
-                {
-                    sum = this->getValue(i, j, k) + field.getValue(i, j, k);
-                    newField.setValue(i, j, k, sum);
-                }
-            }
-        }
-
-        return newField;
-    }
-
-
-    template <typename T>
-    AbstractField3D<T> AbstractField3D<T>::operator-(const AbstractField3D& field) const
-    {
-        AbstractField3D newField(this->x_size, this->y_size, this->z_size);
-        // Assuming both fields have the same dimensions
-        for (size_t i = 0; i < this->x_size; i++)
-        {
-            T difference;
-            for (size_t j = 0; j < this->y_size; ++j)
-            {
-                for (size_t k = 0; k < this->z_size; ++k)
-                {
-                    difference = this->getValue(i, j, k) - field.getValue(i, j, k);
-                    newField.setValue(i, j, k, difference);
-                }
-            }
-        }
-
-        return newField;
     }
 }
 
