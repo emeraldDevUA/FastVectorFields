@@ -197,7 +197,6 @@ namespace vfFields
             const size_t y_size = this->y_size;
             const size_t z_size = this->z_size;
 
-
             if (!(x_size == field.x_size &&
                 y_size == field.y_size &&
                 z_size == field.z_size))

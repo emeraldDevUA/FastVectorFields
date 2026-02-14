@@ -101,9 +101,9 @@ namespace vfFields
         {
             os << "z = " << z << '\n';
 
-            for (size_t y = 0; y < m.getGridSizeY(); ++y)
+            for (size_t x = 0; x < m.getGridSizeY(); ++x)
             {
-                for (size_t x = 0; x < m.getGridSizeX(); ++x)
+                for (size_t y = 0; y < m.getGridSizeX(); ++y)
                 {
                     os << m.getValue(x, y, z) << ' ';
                 }

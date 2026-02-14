@@ -103,7 +103,6 @@ namespace vfFields
             auto row_size = this->x_size;
             auto column_size = this->y_size;
 
-
             std::vector<Vector3D<T>> xValues;
             std::vector<Vector3D<T>> yValues;
 

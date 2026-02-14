@@ -1,6 +1,6 @@
 ## Fast Vector Fields 
 
-FastVectorFields is a compact library for storing, operating and modifying 2 and 3-dimensional vector fields.
+FastVectorFields is a compact header-only library for storing, operating and modifying 2 and 3-dimensional vector fields.
 Such fields can be used to store velocities, trajectories, densities and other vector data. Can be used for simulation in physics, flow fields
 in games or visualization.
 

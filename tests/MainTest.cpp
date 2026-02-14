@@ -58,12 +58,12 @@ int main()
 
     scalar_field3D.fill([](const double x, const double y, const double z)
     {
-        const double r = std::sqrt(x * x + y * y);
+        const double r = std::sqrt(x * x + y * y + z*z);
         const double theta = std::atan2(y, x);
         return std::sin(8 * std::numbers::pi * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
-    VectorField3D vector_field3D(scalar_field3D);
+    const VectorField3D vector_field3D(scalar_field3D);
     vector_field.normalize();
 
     // Serialize using the new function
