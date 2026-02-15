@@ -1,7 +1,7 @@
+import sys
 import json
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
 
 # Load JSON
 field_path = sys.argv[1]

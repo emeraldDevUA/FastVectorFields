@@ -12,10 +12,10 @@ A vector field is a common concept in physical/mathematical modeling
 that describes an object that assigns a point in space to a vector value.
 
 #### For 2D:
-$`\vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j`$
+$\vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j$
 
 #### For 3D: 
-$`\vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k`$
+$\vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k$
 
 
 ### What data structures do you have to deal with? 

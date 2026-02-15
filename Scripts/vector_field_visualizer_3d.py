@@ -1,7 +1,7 @@
+import sys
 import json
 import numpy as np
 import plotly.graph_objects as go
-import sys
 
 # --------------------
 # Load JSON file
