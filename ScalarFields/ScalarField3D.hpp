@@ -22,11 +22,6 @@ namespace vfFields
         {
         }
 
-        explicit ScalarField3D(size_t x_size, size_t y_size)
-            : AbstractField3D<T>(x_size, y_size)
-        {
-        }
-
         explicit ScalarField3D(size_t x_size, size_t y_size, size_t z_size)
             : AbstractField3D<T>(x_size, y_size, z_size)
         {
