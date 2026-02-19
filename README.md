@@ -1,6 +1,6 @@
 ## Fast Vector Fields 
 
-FastVectorFields is a compact library for storing, operating and modifying 2 and 3-dimensional vector fields.
+FastVectorFields is a compact header-only library for storing, operating and modifying 2 and 3-dimensional vector fields.
 Such fields can be used to store velocities, trajectories, densities and other vector data. Can be used for simulation in physics, flow fields
 in games or visualization.
 
@@ -12,10 +12,10 @@ A vector field is a common concept in physical/mathematical modeling
 that describes an object that assigns a point in space to a vector value.
 
 #### For 2D:
-$` \vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j`$
+$\vec F(x, y) = P(x,y) \vec i + Q(x,y) \vec j$
 
 #### For 3D: 
-$` \vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k`$
+$\vec F(x, y, z) = P(x,y,z) \vec i + Q(x,y,z) \vec j + R(x,y,z) \vec k$
 
 
 ### What data structures do you have to deal with? 
@@ -39,43 +39,76 @@ all the mentioned above classes.
 ### How to use the library?
 
 ```cpp
+#include "../Vectors/Vector2D.hpp"
+#include "../Vectors/Vector3D.hpp"
+
+#include "../ScalarFields/ScalarField2D.hpp"
+#include "../VectorFields/VectorField2D.hpp"
+
+#include "../ScalarFields/ScalarField3D.hpp"
+#include "../VectorFields/VectorField3D.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <cereal/types/memory.hpp>
-
-#include "../VectorFields/VectorField2D.h"
-#include "../ScalarFields/ScalarField2D.h"
-#include "../FieldBase/AbstractField2D.h"
-#include "../Vectors/Vector2D.h"
-#include "../Vectors/Vector3D.h"
 
 using vfMath::Vector2D;
 
 using vfFields::VectorField2D;
 using vfFields::ScalarField2D;
 
+using vfFields::VectorField3D;
+using vfFields::ScalarField3D;
+
+template <typename T>
+void serializeToJson(const T& object, const std::string& filename, const std::string& name)
+{
+    std::ofstream os(filename);
+    if (!os)
+    {
+        std::cerr << "Failed to open " << filename << " for writing.\n";
+        return;
+    }
+
+    cereal::JSONOutputArchive archive(os);
+    archive(cereal::make_nvp(name, object));
+}
+
 int main()
 {
+    // 2D Fields
     ScalarField2D<double> scalar_field(128, 128);
 
     scalar_field.fill([](const double x, const double y)
     {
         const double r = std::sqrt(x * x + y * y);
         const double theta = std::atan2(y, x);
-        return std::sin(8 * M_PI * r + 4 * theta);
+        return std::sin(8 * std::numbers::pi * r + 4 * theta);
     }, -1.0, 1.0, -1.0, 1.0);
 
     VectorField2D vector_field(scalar_field);
     vector_field.normalize();
 
-    std::ofstream os1("scalar_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive1(os1);
+    // Serialize using the new function
+    serializeToJson(scalar_field, "scalar_field.json", "scalar_field");
+    serializeToJson(vector_field, "vector_field.json", "vector_field");
 
-    archive1(cereal::make_nvp<>("scalar_field", scalar_field));
+    // 3D Fields
+    ScalarField3D<double> scalar_field3D(32, 32, 32);
 
-    std::ofstream os("vector_field.json", std::ios::binary);
-    cereal::JSONOutputArchive archive(os);
-    archive(cereal::make_nvp<>("vector_field", vector_field));
+    scalar_field3D.fill([](const double x, const double y, const double z)
+    {
+        const double r = std::sqrt(x * x + y * y);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * std::numbers::pi * r + 4 * theta);
+    }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+    VectorField3D vector_field3D(scalar_field3D);
+    vector_field.normalize();
+
+    // Serialize using the new function
+    serializeToJson(scalar_field, "scalar_field3D.json", "scalar_field");
+    serializeToJson(vector_field, "vector_field3D.json", "vector_field");
 
     return 0;
 }
@@ -88,7 +121,7 @@ fields. They can be visualized using matplotlib or plotly charts.
 
 $$
 \begin{aligned}
-f(x,y) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
+f(x,y) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4 \cdot \mathrm{atan2}(y,x) \right), \\
 (x,y) &\in [-1,1] \times [-1,1]
 \end{aligned}
 $$
@@ -102,7 +135,7 @@ $$
 
 $$
 \begin{aligned}
-f(x,y, z) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4\,\mathrm{atan2}(y,x) \right), \\
+f(x,y, z) &= \sin\left( 8\pi \sqrt{x^2 + y^2} + 4 \cdot \mathrm{atan2}(y,x) \right), \\
 (x,y,z) &\in [-1,1] \times [-1,1] \times [-1,1]
 \end{aligned}
 $$
@@ -126,10 +159,10 @@ Uses bilinear or trilinear interpolation to sample between the tiles.
 ```cpp
 VectorField2D<double> vector_field(3, 3);
 
-vector_field.setValue(0, 0, {1.0, 1.0});
-vector_field.setValue(1, 1, {-1.0, -1.0});
+vector_field(0, 0) = {1.0, 1.0};
+vector_field(1, 1) = {-1.0, -1.0};
 
-auto result = a(0.5, 0.5);
+auto result = a.sample(0.5, 0.5);
  ```
 
 #### For 3D:
@@ -137,10 +170,10 @@ auto result = a(0.5, 0.5);
 ```cpp
 VectorField3D<double> vector_field(3, 3, 3);
 
-vector_field.setValue(0, 0, 0,{1.0, 1.0, 1.0});
-vector_field.setValue(1, 1, 0, {-1.0, -1.0, -1.0});
+vector_field(0, 0, 0) = {1.0, 1.0, 1.0};
+vector_field(1, 1, 1) = {-1.0, -1.0, -1.0};
 
-auto result = a(0.5, 0.5, 0.5);
+auto result = a.sample(0.5, 0.5, 0.5);
  ```
 
 Use case: getting additional samples between the tiles.
@@ -152,9 +185,9 @@ Uses RBF-interpolation to fill the data structure with approximated vectors.
 VectorField2D<double> vector_field(16, 16);
 
 // Setting only 3 vectors, the rest will be filled with interpolation.
-vector_field.setValue(0, 0, {1.0, 0.0});
-vector_field.setValue(3, 3, {-1.0, 0.0});
-vector_field.setValue(1, 1, {0.5, -0.5});
+vector_field(0, 0) = {1.0, 0.0};
+vector_field(3, 3) = {-1.0, 0.0};
+vector_field(1, 1) = {0.5, -0.5};
 
 vector_field.fillWithInterpolation();
 ```
@@ -165,9 +198,9 @@ vector_field.fillWithInterpolation();
 VectorField3D<double> vector_field(16, 16, 16);
 
 // Setting only 3 vectors, the rest will be filled with interpolation.
-vector_field.setValue(0, 0, 0, {1.0, 0.0, -0.5});
-vector_field.setValue(3, 3, 3, {-1.0, 0.0, 0.5});
-vector_field.setValue(1, 1, 1, {0.5, -0.5, 0.5});
+vector_field(0, 0, 0) = {1.0, 0.0, -0.5};
+vector_field(3, 3, 3) = {-1.0, 0.0, 0.5};
+vector_field(1, 1, 1) = {0.5, -0.5, 0.5};
 
 a.fillWithInterpolation();
 ```

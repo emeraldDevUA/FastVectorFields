@@ -49,13 +49,51 @@ namespace vfFields
         }
 
 
-        Vector2D<T> gradient(T x, T y, T epsilon) const
+        Vector2D<T> gradient(T x, T y, T epsilon = static_cast<T>(1)) const
         {
             // other derivative type
             double dx = (this->getValue(x + epsilon, y) - this->getValue(x - epsilon, y)) / (2.0 * epsilon);
             double dy = (this->getValue(x, y + epsilon) - this->getValue(x, y - epsilon)) / (2.0 * epsilon);
 
             return Vector2D<T>(static_cast<T>(dx), static_cast<T>(dy));
+        }
+
+        ScalarField2D operator+(const ScalarField2D& field) const
+        {
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for addition.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
+
+            ScalarField2D newField(row_size, column_size);
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
+
+            return newField;
+        }
+
+        ScalarField2D operator-(const ScalarField2D& field) const
+        {
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
+
+            ScalarField2D newField(row_size, column_size);
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
+
+            return newField;
         }
     };
 }

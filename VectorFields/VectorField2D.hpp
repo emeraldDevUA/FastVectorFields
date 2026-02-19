@@ -33,9 +33,9 @@ namespace vfFields
         explicit VectorField2D(const ScalarField2D<T>& field)
             : AbstractField2D<Vector2D<T>>(field.getGridSizeX(), field.getGridSizeY())
         {
-            for (size_t i = 1; i + 1 < field.getGridSizeX(); ++i)
+            for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
             {
-                for (size_t j = 1; j + 1 < field.getGridSizeY(); ++j)
+                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
                 {
                     this->setValue(i, j, field.gradient(i, j, 1));
                 }
@@ -71,29 +71,24 @@ namespace vfFields
             }
         }
 
-        T divergence(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
+        T divergence(size_t i, size_t j, T eps = static_cast<T>(1)) const
         {
             // Assuming your class provides access to u(i,j) and v(i,j)
             // You might need to adapt these if your storage is different
 
             //assume that u(i, j) is this(i, j).x and v(i, j) is this(i, j).y
-
-            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
-
+            T du_dx = (this->getValue(i + eps, j).x - this->getValue(i - eps, j).x) / 2.0;
+            T dv_dy = (this->getValue(i, j + eps).y - this->getValue(i, j - eps).y) / 2.0;
             return du_dx + dv_dy;
         }
 
 
-        T curl(size_t i, size_t j, T eps = static_cast<T>(1e-6)) const
+        T curl(size_t i, size_t j, T eps = static_cast<T>(1)) const
         {
             // For 2D vector field (u, v), curl = dv/dx - du/dy
-            T du_dx = (this->getValue(i + 1, j).x - this->getValue(i - 1, j).x) / (2.0 * eps);
-            T dv_dy = (this->getValue(i, j + 1).y - this->getValue(i, j - 1).y) / (2.0 * eps);
-
-            // Return as Vector2D with curl value in z-component represented as x, y=0
-            // Or if you want the scalar curl, consider changing return type to T
-            return du_dx - dv_dy;
+            T du_dy = (this->getValue(i, j + eps).x - this->getValue(i, j - eps).x) / 2.0;
+            T dv_dx = (this->getValue(i + eps, j).y - this->getValue(i - eps, j).y) / 2.0;
+            return dv_dx - du_dy;
         }
 
 
@@ -102,7 +97,6 @@ namespace vfFields
         {
             auto row_size = this->x_size;
             auto column_size = this->y_size;
-
 
             std::vector<Vector3D<T>> xValues;
             std::vector<Vector3D<T>> yValues;
@@ -149,49 +143,46 @@ namespace vfFields
         }
 
 
-        void normalize()
+        void normalize(T eps = static_cast<T>(1e-9))
         {
-            const size_t full_size = this->getGridSizeX() * this->getGridSizeY();
-            for (size_t i = 0; i < full_size; ++i)
-            {
-                this->inner_data[i].normalize();
-            }
+            for (auto& v : this->inner_data)
+                v.normalize(eps);
         }
 
         VectorField2D operator+(const VectorField2D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for addition.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
 
             VectorField2D newField(row_size, column_size);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
-            {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    newField.inner_data[i * row_size + j] =
-                        this->inner_data[i * row_size + j] + field.inner_data[i * row_size + j];
-                }
-            }
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
             return newField;
         }
 
         VectorField2D operator-(const VectorField2D& field) const
         {
-            auto row_size = this->x_size;
-            auto column_size = this->y_size;
+            if (!(this->x_size == field.x_size && this->y_size == field.y_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
+            }
+
+            const size_t row_size = field.x_size;
+            const size_t column_size = field.y_size;
 
             VectorField2D newField(row_size, column_size);
-            // Assuming both fields have the same dimensions
-            for (size_t i = 0; i < row_size; i++)
-            {
-                for (size_t j = 0; j < column_size; ++j)
-                {
-                    newField.inner_data[i * row_size + j] =
-                        this->inner_data[i * row_size + j] - field.inner_data[i * row_size + j];
-                }
-            }
+            const size_t full_size = row_size * column_size;
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 
             return newField;
         }

@@ -9,8 +9,6 @@
 #include <ostream>
 
 #include <cereal/archives/json.hpp>
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/xml.hpp>
 
 namespace vfMath
 {
@@ -34,10 +32,10 @@ namespace vfMath
             return std::sqrt(x * x + y * y + z * z);
         }
 
-        void normalize()
+        void normalize(T eps = static_cast<T>(1e-9))
         {
             T len = length();
-            if (len > std::numeric_limits<T>::epsilon()) // ✅ template-safe
+            if (len > eps) // ✅ template-safe
             {
                 x /= len;
                 y /= len;
@@ -67,7 +65,7 @@ namespace vfMath
 
         bool operator==(const Vector3D& other) const
         {
-            auto epsilon = std::numeric_limits<T>::epsilon();
+            auto epsilon = 1e-12;
             return std::abs(x - other.x) < epsilon
                 && std::abs(y - other.y) < epsilon
                 && std::abs(z - other.z) < epsilon;

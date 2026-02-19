@@ -22,11 +22,6 @@ namespace vfFields
         {
         }
 
-        explicit ScalarField3D(size_t x_size, size_t y_size)
-            : AbstractField3D<T>(x_size, y_size)
-        {
-        }
-
         explicit ScalarField3D(size_t x_size, size_t y_size, size_t z_size)
             : AbstractField3D<T>(x_size, y_size, z_size)
         {
@@ -63,7 +58,7 @@ namespace vfFields
         }
 
 
-        Vector3D<T> gradient(T x, T y, T z, T epsilon = static_cast<T>(1e-6)) const
+        Vector3D<T> gradient(T x, T y, T z, T epsilon = static_cast<T>(1)) const
         {
             // other derivative type
             double dx = (this->getValue(x + epsilon, y, z) - this->getValue(x - epsilon, y, z)) / (2.0 * epsilon);
@@ -71,6 +66,55 @@ namespace vfFields
             double dz = (this->getValue(x, y, z + epsilon) - this->getValue(x, y, z - epsilon)) / (2.0 * epsilon);
 
             return Vector3D<T>(static_cast<T>(dx), static_cast<T>(dy), static_cast<T>(dz));
+        }
+
+        ScalarField3D operator+(const ScalarField3D& field) const
+        {
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
+
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for addition.");
+            }
+
+            ScalarField3D newField(x_size, y_size, z_size);
+
+            const size_t full_size = x_size * y_size * z_size;
+
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
+
+            return newField;
+        }
+
+
+        ScalarField3D operator-(const ScalarField3D& field) const
+        {
+            const size_t x_size = this->x_size;;
+            const size_t y_size = this->y_size;
+            const size_t z_size = this->z_size;
+
+
+            if (!(x_size == field.x_size &&
+                y_size == field.y_size &&
+                z_size == field.z_size))
+            {
+                throw std::out_of_range("Field dimensions don't match for subtraction.");
+            }
+
+            const size_t full_size = x_size * y_size * z_size;
+
+            ScalarField3D newField(x_size, y_size, z_size);
+
+            for (size_t i = 0; i < full_size; ++i)
+                newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
+
+            return newField;
         }
     };
 }
