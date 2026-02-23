@@ -183,7 +183,7 @@ namespace vfFields
 
             const size_t full_size = x_size * y_size * z_size;
 
-
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
@@ -204,10 +204,12 @@ namespace vfFields
                 throw std::out_of_range("Field dimensions don't match for subtraction.");
             }
 
-            const size_t full_size = x_size * y_size * z_size;
-
             VectorField3D newField(x_size, y_size, z_size);
 
+            const size_t full_size = x_size * y_size * z_size;
+
+
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 

@@ -78,7 +78,7 @@ int main()
 
     // Sizes to test (you can modify this)
     std::vector<size_t> sizes = {
-        64, 128, 256, 512, 768
+        64, 128, 256, 512
     };
 
     constexpr int REPEAT = 5; // average over multiple runs
@@ -105,11 +105,13 @@ int main()
        }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
         long long total_time = 0;
+        VectorField3D<double> v_field_1(field_1);
+        VectorField3D<double> v_field_2(field_2);
 
         for (int i = 0; i < REPEAT; ++i)
         {
             auto start = high_resolution_clock::now();
-            ScalarField3D<double> result = field_1 + field_2;
+            auto result = v_field_1 + v_field_2;
             auto end = high_resolution_clock::now();
 
             total_time += duration_cast<milliseconds>(end - start).count();

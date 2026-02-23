@@ -162,6 +162,7 @@ namespace vfFields
             VectorField2D newField(row_size, column_size);
             const size_t full_size = row_size * column_size;
 
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
@@ -181,6 +182,7 @@ namespace vfFields
             VectorField2D newField(row_size, column_size);
             const size_t full_size = row_size * column_size;
 
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 
