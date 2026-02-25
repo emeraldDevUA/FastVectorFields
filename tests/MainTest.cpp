@@ -78,42 +78,42 @@ int main()
 
     // Sizes to test (you can modify this)
     std::vector<size_t> sizes = {
-        64, 128, 256, 512
+        64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384
     };
 
     constexpr int REPEAT = 5; // average over multiple runs
 
     for (const size_t size : sizes)
     {
-        ScalarField3D<double> field_1(size);
-        ScalarField3D<double> field_2(size);
+        ScalarField2D<double> field_1(size);
+        // ScalarField3D<double> field_2(size);
 
-        field_1.fill([](double x, double y, double z)
+        field_1.fill([](double x, double y)
         {
-            const double r = std::sqrt(x * x + y * y + z*z);
+            const double r = std::sqrt(x * x + y * y);
             const double theta = std::atan2(y, x);
 
             return std::sin(8 * std::numbers::pi * r + 4 * theta);
-        }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+        }, -1.0, 1.0, -1.0, 1.0);
 
-        field_2.fill([](double x, double y, double z)
-       {
-           const double r = std::sqrt(x * x + y * y + z*z);
-           const double theta = std::atan2(y, x);
-
-           return std::sin(8 * std::numbers::pi * r + 4 * theta);
-       }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+       //  field_2.fill([](double x, double y, double z)
+       // {
+       //     const double r = std::sqrt(x * x + y * y + z*z);
+       //     const double theta = std::atan2(y, x);
+       //
+       //     return std::sin(8 * std::numbers::pi * r + 4 * theta);
+       // }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
         long long total_time = 0;
-        VectorField3D<double> v_field_1(field_1);
-        VectorField3D<double> v_field_2(field_2);
+        //VectorField3D<double> v_field_2(field_2);
 
         for (int i = 0; i < REPEAT; ++i)
         {
             auto start = high_resolution_clock::now();
-            auto result = v_field_1 + v_field_2;
+            const auto *v_field_1 = new VectorField2D<double>(field_1);
             auto end = high_resolution_clock::now();
 
+            delete v_field_1;
             total_time += duration_cast<milliseconds>(end - start).count();
         }
 

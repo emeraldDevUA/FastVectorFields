@@ -39,7 +39,7 @@ namespace vfFields
             T delta_y = (y1 - y0) / static_cast<T>(y_local);
             T delta_z = (z1 - z0) / static_cast<T>(z_local);
 
-
+            #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
             for (size_t i = 0; i < x_local; ++i)
             {
                 for (size_t j = 0; j < y_local; ++j)

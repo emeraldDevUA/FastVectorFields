@@ -36,11 +36,16 @@ namespace vfFields
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
-            for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
+            auto grid_size_x = field.getGridSizeX();
+            auto grid_size_y = field.getGridSizeY();
+            auto grid_size_z = field.getGridSizeZ();
+
+            #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
+            for (size_t i = 1; i < grid_size_x - 1; ++i)
             {
-                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
+                for (size_t j = 1; j < grid_size_y - 1; ++j)
                 {
-                    for (size_t k = 1; k < field.getGridSizeZ() - 1; ++k)
+                    for (size_t k = 1; k < grid_size_z - 1; ++k)
                     {
                         this->setValue(i, j, k, field.gradient(i, j, k, 1));
                     }
@@ -207,7 +212,6 @@ namespace vfFields
             VectorField3D newField(x_size, y_size, z_size);
 
             const size_t full_size = x_size * y_size * z_size;
-
 
             #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
