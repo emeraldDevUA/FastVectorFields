@@ -139,7 +139,6 @@ namespace vfFields
                     T vectorY = yInterpolator.evaluate(x_coord, z_coord);
 
                     Vector2D<T> value(vectorX, vectorY);
-                    value.normalize();
 
                     this->setValue(i, j, value);
                 }
@@ -149,8 +148,9 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            for (auto& v : this->inner_data)
-                v.normalize(eps);
+            #pragma omp parallel for
+            for (size_t i = 0; i < this->inner_data.size(); ++i)
+                this->inner_data[i].normalize(eps);
         }
 
         VectorField2D operator+(const VectorField2D& field) const

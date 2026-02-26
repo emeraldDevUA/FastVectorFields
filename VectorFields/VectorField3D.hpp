@@ -156,7 +156,6 @@ namespace vfFields
                         T vectorZ = zInterpolator.evaluate(x_coord, y_coord, z_coord);
 
                         Vector3D<T> value(vectorX, vectorY, vectorZ);
-                        value.normalize();
 
                         this->setValue(i, j, k, value);
                     }
@@ -167,8 +166,9 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            for (auto& v : this->inner_data)
-                v.normalize(eps);
+            #pragma omp parallel for
+            for (size_t i = 0; i < this->inner_data.size(); ++i)
+                this->inner_data[i].normalize(eps);
         }
 
         VectorField3D operator+(const VectorField3D& field) const
