@@ -23,6 +23,8 @@ namespace vfFields
         size_t x_size;
         size_t y_size;
 
+        size_t omp_threshold = 10000;
+
     public:
         explicit AbstractField2D(const size_t grid_size)
             : inner_data(grid_size * grid_size),
@@ -47,6 +49,11 @@ namespace vfFields
         T getValue(const size_t x, const size_t y) const
         {
             return inner_data[x * y_size + y];
+        }
+
+        void setOmpThreshold(const size_t threshold)
+        {
+            this->omp_threshold = threshold;
         }
 
         [[nodiscard]] size_t getGridSizeX() const { return x_size; }

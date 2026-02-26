@@ -39,7 +39,7 @@ namespace vfFields
             T delta_y = (y1 - y0) / static_cast<T>(y_local);
             T delta_z = (z1 - z0) / static_cast<T>(z_local);
 
-
+            #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
             for (size_t i = 0; i < x_local; ++i)
             {
                 for (size_t j = 0; j < y_local; ++j)
@@ -85,8 +85,9 @@ namespace vfFields
 
             const size_t full_size = x_size * y_size * z_size;
 
-
-            for (size_t i = 0; i < full_size; ++i)
+            // for some reason, simd doesn't work well with 3D fields, so we use regular parallel for
+            #pragma omp parallel for if (full_size > this->omp_threshold)
+            for (int i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
             return newField;
@@ -111,6 +112,8 @@ namespace vfFields
 
             ScalarField3D newField(x_size, y_size, z_size);
 
+            // for some reason, simd doesn't work well with 3D fields, so we use regular parallel for
+            #pragma omp parallel for if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 

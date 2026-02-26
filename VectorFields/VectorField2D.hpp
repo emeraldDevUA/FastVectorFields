@@ -33,9 +33,13 @@ namespace vfFields
         explicit VectorField2D(const ScalarField2D<T>& field)
             : AbstractField2D<Vector2D<T>>(field.getGridSizeX(), field.getGridSizeY())
         {
-            for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
+            const size_t nx = field.getGridSizeX();
+            const size_t ny = field.getGridSizeY();
+
+            #pragma omp parallel for collapse(2) if (full_size > this->omp_threshold)
+            for (size_t i = 1; i < nx - 1; ++i)
             {
-                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
+                for (size_t j = 1; j < ny - 1; ++j)
                 {
                     this->setValue(i, j, field.gradient(i, j, 1));
                 }
@@ -56,6 +60,7 @@ namespace vfFields
             const T delta_x = (x1 - x0) / static_cast<T>(x_size);
             const T delta_y = (y1 - y0) / static_cast<T>(y_size);
 
+            #pragma omp parallel for collapse(2) if (full_size > this->omp_threshold)
             for (size_t i = 0; i < x_size; ++i)
             {
                 for (size_t j = 0; j < y_size; ++j)
@@ -73,12 +78,10 @@ namespace vfFields
 
         T divergence(size_t i, size_t j, T eps = static_cast<T>(1)) const
         {
-            // Assuming your class provides access to u(i,j) and v(i,j)
-            // You might need to adapt these if your storage is different
-
             //assume that u(i, j) is this(i, j).x and v(i, j) is this(i, j).y
             T du_dx = (this->getValue(i + eps, j).x - this->getValue(i - eps, j).x) / 2.0;
             T dv_dy = (this->getValue(i, j + eps).y - this->getValue(i, j - eps).y) / 2.0;
+
             return du_dx + dv_dy;
         }
 
@@ -88,6 +91,7 @@ namespace vfFields
             // For 2D vector field (u, v), curl = dv/dx - du/dy
             T du_dy = (this->getValue(i, j + eps).x - this->getValue(i, j - eps).x) / 2.0;
             T dv_dx = (this->getValue(i + eps, j).y - this->getValue(i - eps, j).y) / 2.0;
+
             return dv_dx - du_dy;
         }
 
@@ -135,7 +139,6 @@ namespace vfFields
                     T vectorY = yInterpolator.evaluate(x_coord, z_coord);
 
                     Vector2D<T> value(vectorX, vectorY);
-                    value.normalize();
 
                     this->setValue(i, j, value);
                 }
@@ -145,8 +148,9 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            for (auto& v : this->inner_data)
-                v.normalize(eps);
+            #pragma omp parallel for
+            for (size_t i = 0; i < this->inner_data.size(); ++i)
+                this->inner_data[i].normalize(eps);
         }
 
         VectorField2D operator+(const VectorField2D& field) const
@@ -162,6 +166,7 @@ namespace vfFields
             VectorField2D newField(row_size, column_size);
             const size_t full_size = row_size * column_size;
 
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
@@ -181,6 +186,7 @@ namespace vfFields
             VectorField2D newField(row_size, column_size);
             const size_t full_size = row_size * column_size;
 
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 
