@@ -7,7 +7,6 @@
 
 #include <cmath>
 #include <ostream>
-
 #include <cereal/archives/json.hpp>
 
 namespace vfMath
@@ -27,7 +26,7 @@ namespace vfMath
         {
         }
 
-        T length() const // ✅ const-correct
+        T length() const
         {
             return std::sqrt(x * x + y * y + z * z);
         }
@@ -35,7 +34,7 @@ namespace vfMath
         void normalize(T eps = static_cast<T>(1e-9))
         {
             T len = length();
-            if (len > eps) // ✅ template-safe
+            if (len > eps)
             {
                 x /= len;
                 y /= len;

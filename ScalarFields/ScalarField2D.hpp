@@ -33,6 +33,8 @@ namespace vfFields
             const size_t x_local = this->x_size;
             const size_t y_local = this->y_size;
 
+            const size_t full_size = x_local * y_local;
+
             T delta_x = (x1 - x0) / static_cast<T>(x_local);
             T delta_y = (y1 - y0) / static_cast<T>(y_local);
 

@@ -5,7 +5,6 @@
 #ifndef FASTVECTORFIELDS_VECTORFIELD3D_H
 #define FASTVECTORFIELDS_VECTORFIELD3D_H
 
-
 #include "../Vectors/Vector3D.hpp"
 #include "../Vectors/Vector4D.hpp"
 #include "../ScalarFields/ScalarField3D.hpp"
@@ -15,7 +14,6 @@
 using vfMath::Vector3D;
 using vfMath::Vector4D;
 using vfInterpolation::RBFInterpolator3D;
-
 
 namespace vfFields
 {
@@ -36,10 +34,11 @@ namespace vfFields
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
-            auto grid_size_x = field.getGridSizeX();
-            auto grid_size_y = field.getGridSizeY();
-            auto grid_size_z = field.getGridSizeZ();
+            const size_t grid_size_x = field.getGridSizeX();
+            const size_t grid_size_y = field.getGridSizeY();
+            const size_t grid_size_z = field.getGridSizeZ();
 
+            auto full_size = grid_size_x * grid_size_y * grid_size_z;
             #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
             for (size_t i = 1; i < grid_size_x - 1; ++i)
             {
@@ -141,6 +140,7 @@ namespace vfFields
             RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon);
             RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon);
 
+            #pragma omp parallel for collapse(3) if (row_size * column_size * matrix_depth > this->omp_threshold)
             for (size_t k = 0; k < matrix_depth; ++k)
             {
                 for (size_t i = 0; i < row_size; ++i)
@@ -166,8 +166,10 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            #pragma omp parallel for
-            for (size_t i = 0; i < this->inner_data.size(); ++i)
+            auto full_size = this->inner_data.size();
+
+            #pragma omp parallel for if (full_size > this->omp_threshold)
+            for (size_t i = 0; i < full_size; ++i)
                 this->inner_data[i].normalize(eps);
         }
 

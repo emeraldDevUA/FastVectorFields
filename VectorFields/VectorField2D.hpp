@@ -128,6 +128,7 @@ namespace vfFields
             RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon);
             RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon);
 
+            #pragma omp parallel for collapse(2) if (row_size * column_size > this->omp_threshold)
             for (size_t i = 0; i < row_size; ++i)
             {
                 for (size_t j = 0; j < column_size; ++j)
@@ -148,8 +149,10 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            #pragma omp parallel for
-            for (size_t i = 0; i < this->inner_data.size(); ++i)
+            auto full_size = this->inner_data.size();
+
+            #pragma omp parallel for if (full_size > this->omp_threshold)
+            for (size_t i = 0; i < full_size; ++i)
                 this->inner_data[i].normalize(eps);
         }
 

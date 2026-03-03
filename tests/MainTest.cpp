@@ -41,98 +41,83 @@ void serializeToJson(const T& object, const std::string& filename, const std::st
 
 int main()
 {
-    // ScalarField2D<double> scalar_field(128, 128);
-    //
-    // scalar_field.fill([](const double x, const double y)
-    // {
-    //     const double r = std::sqrt(x * x + y * y);
-    //     const double theta = std::atan2(y, x);
-    //     return std::sin(8 * std::numbers::pi * r + 4 * theta);
-    // }, -1.0, 1.0, -1.0, 1.0);
-    //
-    // VectorField2D vector_field(scalar_field);
-    // vector_field.normalize();
-    //
-    // // Serialize using the new function
-    // serializeToJson(scalar_field, "scalar_field.json", "scalar_field");
-    // serializeToJson(vector_field, "vector_field.json", "vector_field");
-    //
-    // ScalarField3D<double> scalar_field3D(32, 32, 32);
-    //
-    // scalar_field3D.fill([](const double x, const double y, const double z)
-    // {
-    //     const double r = std::sqrt(x * x + y * y + z*z);
-    //     const double theta = std::atan2(y, x);
-    //     return std::sin(8 * std::numbers::pi * r + 4 * theta);
-    // }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    //
-    // const VectorField3D vector_field3D(scalar_field3D);
-    // vector_field.normalize();
-    //
-    // // Serialize using the new function
-    // serializeToJson(vector_field3D, "scalar_field3D.json", "scalar_field");
-    // serializeToJson(vector_field3D, "vector_field3D.json", "vector_field");
+    ScalarField2D<double> scalar_field(64, 64);
 
-    std::ofstream file("addition_benchmark.csv");
-    file << "size,total_elements,time_ms\n";
-
-    // Sizes to test (you can modify this)
-    std::vector<size_t> sizes = {
-        64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384
-    };
-
-    constexpr int REPEAT = 5; // average over multiple runs
-
-    for (const size_t size : sizes)
+    scalar_field.fill([](const double x, const double y)
     {
-        ScalarField2D<double> field_1(size);
-        // ScalarField3D<double> field_2(size);
+        const double r = std::sqrt(x * x + y * y);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
+    }, -1.0, 1.0, -1.0, 1.0);
 
-        field_1.fill([](double x, double y)
-        {
-            const double r = std::sqrt(x * x + y * y);
-            const double theta = std::atan2(y, x);
+    VectorField2D vector_field(scalar_field);
+    vector_field.normalize();
 
-            return std::sin(8 * std::numbers::pi * r + 4 * theta);
-        }, -1.0, 1.0, -1.0, 1.0);
+    serializeToJson(scalar_field, "scalar_field", "scalar_field");
 
-       //  field_2.fill([](double x, double y, double z)
-       // {
-       //     const double r = std::sqrt(x * x + y * y + z*z);
-       //     const double theta = std::atan2(y, x);
-       //
-       //     return std::sin(8 * std::numbers::pi * r + 4 * theta);
-       // }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    serializeToJson(vector_field, "vector_field", "vector_field");
 
-        long long total_time = 0;
-        //VectorField3D<double> v_field_2(field_2);
+    int N = 128;
+    VectorField2D<double> interpolation_target(N, N);
 
-        for (int i = 0; i < REPEAT; ++i)
-        {
-            auto start = high_resolution_clock::now();
-            const auto *v_field_1 = new VectorField2D<double>(field_1);
-            auto end = high_resolution_clock::now();
 
-            delete v_field_1;
-            total_time += duration_cast<milliseconds>(end - start).count();
-        }
+    interpolation_target.setValue(0, 0, {1.0, 0.0});
+    interpolation_target.setValue(N-1, N-1, {-1.0, 0});
+    interpolation_target.setValue(20 * N / 32, 17 * N / 32, {0.5, -0.5});
+    interpolation_target.setValue(13 * N / 32, 12 * N / 32, {-0.5, 0.5});
 
-        const long long avg_time = total_time / REPEAT;
+    interpolation_target.normalize();
 
-        const size_t total_elements = size * size;
+    serializeToJson(interpolation_target, "vector_field_poles", "vector_field");
 
-        std::cout << "Size: " << size
-                  << " (" << total_elements << " elements)"
-                  << " -> " << avg_time << " ms\n";
+    try
+    {
+        interpolation_target.fillWithInterpolation();
+        interpolation_target.normalize();
 
-        file << size << ","
-             << total_elements << ","
-             << avg_time << "\n";
+    }
+    catch (const std::logic_error& e)
+    {
+        std::cerr << "exception caught: " << e.what() << '\n';
     }
 
-    file.close();
+    serializeToJson(interpolation_target, "vector_field_interpolation", "vector_field");
 
-    std::cout << "\nBenchmark saved to addition_benchmark.csv\n";
+    //std::cout << interpolation_target << std::endl;
+
+
+    ScalarField3D<double> scalar_field_3d(32, 32, 32);
+
+    scalar_field_3d.fill([](const double x, const double y, const double z)
+    {
+        const double r = std::sqrt(x * x + y * y + z * z);
+        const double theta = std::atan2(y, x);
+        return std::sin(8 * M_PI * r + 4 * theta);
+    }, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+
+    N = 32;
+    VectorField3D<double> vector_field_3d(N);
+    //vector_field_3d.normalize();
+
+    // serialize(scalar_field_3d, "scalar_field_3d", "scalar_field");
+    //
+    // serialize(vector_field_3d, "vector_field_3d", "vector_field");
+
+    vector_field_3d.setValue(0, 0, 0, {1.0, 0.0, 0});
+    vector_field_3d.setValue(N-1, N-1, N-1, {-1.0, 0, 0});
+    vector_field_3d.setValue(20 * N / 32, 17 * N / 32, 20 * N / 32, {0.5, -0.5, -0.5});
+    vector_field_3d.setValue(13 * N / 32, 20 * N / 32, 12, {-0.5, 0.5, 0.5});
+    //
+
+    serializeToJson(vector_field_3d, "vector_field_3d_poles", "vector_field");
+    vector_field_3d.normalize();
+    vector_field_3d.fillWithInterpolation();
+    vector_field_3d.normalize();
+
+    serializeToJson(vector_field_3d, "vector_field_3d_interpolation", "vector_field");
+
+
 
     return 0;
 }
