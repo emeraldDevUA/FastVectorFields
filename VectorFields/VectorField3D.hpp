@@ -5,7 +5,6 @@
 #ifndef FASTVECTORFIELDS_VECTORFIELD3D_H
 #define FASTVECTORFIELDS_VECTORFIELD3D_H
 
-
 #include "../Vectors/Vector3D.hpp"
 #include "../Vectors/Vector4D.hpp"
 #include "../ScalarFields/ScalarField3D.hpp"
@@ -15,7 +14,6 @@
 using vfMath::Vector3D;
 using vfMath::Vector4D;
 using vfInterpolation::RBFInterpolator3D;
-
 
 namespace vfFields
 {
@@ -36,11 +34,17 @@ namespace vfFields
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
-            for (size_t i = 1; i < field.getGridSizeX() - 1; ++i)
+            const size_t grid_size_x = field.getGridSizeX();
+            const size_t grid_size_y = field.getGridSizeY();
+            const size_t grid_size_z = field.getGridSizeZ();
+
+            auto full_size = grid_size_x * grid_size_y * grid_size_z;
+            #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
+            for (size_t i = 1; i < grid_size_x - 1; ++i)
             {
-                for (size_t j = 1; j < field.getGridSizeY() - 1; ++j)
+                for (size_t j = 1; j < grid_size_y - 1; ++j)
                 {
-                    for (size_t k = 1; k < field.getGridSizeZ() - 1; ++k)
+                    for (size_t k = 1; k < grid_size_z - 1; ++k)
                     {
                         this->setValue(i, j, k, field.gradient(i, j, k, 1));
                     }
@@ -136,6 +140,7 @@ namespace vfFields
             RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon);
             RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon);
 
+            #pragma omp parallel for collapse(3) if (row_size * column_size * matrix_depth > this->omp_threshold)
             for (size_t k = 0; k < matrix_depth; ++k)
             {
                 for (size_t i = 0; i < row_size; ++i)
@@ -151,7 +156,6 @@ namespace vfFields
                         T vectorZ = zInterpolator.evaluate(x_coord, y_coord, z_coord);
 
                         Vector3D<T> value(vectorX, vectorY, vectorZ);
-                        value.normalize();
 
                         this->setValue(i, j, k, value);
                     }
@@ -162,8 +166,11 @@ namespace vfFields
 
         void normalize(T eps = static_cast<T>(1e-9))
         {
-            for (auto& v : this->inner_data)
-                v.normalize(eps);
+            auto full_size = this->inner_data.size();
+
+            #pragma omp parallel for if (full_size > this->omp_threshold)
+            for (size_t i = 0; i < full_size; ++i)
+                this->inner_data[i].normalize(eps);
         }
 
         VectorField3D operator+(const VectorField3D& field) const
@@ -183,7 +190,7 @@ namespace vfFields
 
             const size_t full_size = x_size * y_size * z_size;
 
-
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] + field.inner_data[i];
 
@@ -204,10 +211,11 @@ namespace vfFields
                 throw std::out_of_range("Field dimensions don't match for subtraction.");
             }
 
-            const size_t full_size = x_size * y_size * z_size;
-
             VectorField3D newField(x_size, y_size, z_size);
 
+            const size_t full_size = x_size * y_size * z_size;
+
+            #pragma omp parallel for simd if (full_size > this->omp_threshold)
             for (size_t i = 0; i < full_size; ++i)
                 newField.inner_data[i] = this->inner_data[i] - field.inner_data[i];
 

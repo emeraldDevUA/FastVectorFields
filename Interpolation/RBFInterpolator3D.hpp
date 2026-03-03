@@ -5,11 +5,12 @@
 #ifndef FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 #define FASTVECTORFIELDS_RBFINTERPOLATOR3D_H
 
-#include "../Vectors/Vector4D.hpp"
-#include "Solvers.hpp"
 
-#include <vector>
+#include "Solvers.hpp"
+#include "../Vectors/Vector4D.hpp"
+
 #include <cmath>
+#include <vector>
 
 namespace vfInterpolation
 {
@@ -31,13 +32,13 @@ namespace vfInterpolation
         {
             T result = 0;
 
+            #pragma omp simd reduction(+:result) if (pts.size() > omp_threshold)
             for (size_t i = 0; i < pts.size(); ++i)
             {
                 T r = distance3D(
                     x, y, z,
                     pts[i].x, pts[i].y, pts[i].z
                 );
-
                 result += weights[i] * phi(r);
             }
 
@@ -51,8 +52,11 @@ namespace vfInterpolation
         }
 
     private:
+        const size_t omp_threshold = 10000;
+
         std::vector<Vec4> pts;
         std::vector<T> weights;
+
         T eps;
 
         // Inverse multiquadric RBF

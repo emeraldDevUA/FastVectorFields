@@ -23,6 +23,8 @@ namespace vfFields
         size_t y_size;
         size_t z_size;
 
+        size_t omp_threshold = 512;
+
     public:
         explicit AbstractField3D(const size_t grid_size)
             : inner_data(grid_size * grid_size * grid_size),

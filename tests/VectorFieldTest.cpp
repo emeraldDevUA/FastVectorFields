@@ -107,6 +107,7 @@ TEST_CASE("VectorField Operations", "[vector]")
         a.setValue(3, 3, {-1.0, 0});
         a.setValue(1, 1, {0.5, -0.5});
 
+        a.normalize();
         a.fillWithInterpolation();
 
 
