@@ -37,7 +37,7 @@ namespace vfInterpolation
             {
                 T r = distance3D(
                     x, y, z,
-                    pts[i].x, pts[i].y, pts[i].z, dst_function
+                    pts[i].x, pts[i].y, pts[i].z
                 );
                 result += weights[i] * phi(r);
             }
@@ -115,8 +115,7 @@ namespace vfInterpolation
                 {
                     T r = distance3D(
                         pts[i].x, pts[i].y, pts[i].z,
-                        pts[j].x, pts[j].y, pts[j].z,
-                        dst_function
+                        pts[j].x, pts[j].y, pts[j].z
                     );
 
                     A[i][j] = phi(r);
