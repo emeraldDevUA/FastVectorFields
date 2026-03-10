@@ -7,10 +7,11 @@
 
 #include "Solvers.hpp"
 #include "../Vectors/Vector3D.hpp"
-
+#include "InterpolationParameters.h"
 
 #include <cmath>
 #include <vector>
+
 
 namespace vfInterpolation
 {
@@ -20,8 +21,8 @@ namespace vfInterpolation
     public:
         using Vec3 = vfMath::Vector3D<T>;
 
-        RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon)
-            : pts(points), eps(epsilon)
+        RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon, const DistanceFunction distance_function = DistanceFunction::Euclidean, T power = 2)
+            : pts(points), dst_function(distance_function), eps(epsilon), pwr(power)
         {
             computeWeights();
         }
@@ -50,8 +51,10 @@ namespace vfInterpolation
 
         std::vector<Vec3> pts;
         std::vector<T> weights;
+        DistanceFunction dst_function;
 
         T eps;
+        T pwr;
 
         // Inverse Multiquadric RBF kernel
         T phi(T r) const
@@ -59,11 +62,32 @@ namespace vfInterpolation
             return 1.0 / std::sqrt(r * r + eps * eps);
         }
 
-        static T distance2D(T x1, T z1, T x2, T z2)
-        {
-            T dx = x1 - x2;
-            T dz = z1 - z2;
-            return std::sqrt(dx * dx + dz * dz);
+        T distance2D(
+            T x1, T y1,
+            T x2, T y2
+        ) const{
+            T dx = std::abs(x1 - x2);
+            T dy = std::abs(y1 - y2);
+
+            switch (dst_function)
+            {
+            case DistanceFunction::Euclidean:
+                return std::sqrt(dx*dx + dy*dy);
+
+            case DistanceFunction::EuclideanSquared:
+                return dx*dx + dy*dy;
+
+            case DistanceFunction::Manhattan:
+                return dx + dy;
+
+            case DistanceFunction::Chebyshev:
+                return std::max(dx, dy);
+
+            case DistanceFunction::Minkowski:
+                return std::pow(std::pow(dx, pwr) + std::pow(dy, pwr), T(1)/pwr);
+            }
+
+            return 0;
         }
 
         void computeWeights()

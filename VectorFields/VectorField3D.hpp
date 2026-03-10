@@ -31,6 +31,48 @@ namespace vfFields
         {
         }
 
+        template <typename PxFunc, typename PyFunc, typename PzFunc>
+        explicit VectorField3D(
+            size_t x_size,
+            size_t y_size,
+            size_t z_size,
+            PxFunc&& Px,
+            PyFunc&& Py,
+            PzFunc&& Pz,
+            T x0, T x1,
+            T y0, T y1,
+            T z0, T z1
+        )
+    : AbstractField3D<Vector3D<T>>(x_size, y_size, z_size)
+        {
+            const T delta_x = (x1 - x0) / static_cast<T>(x_size);
+            const T delta_y = (y1 - y0) / static_cast<T>(y_size);
+            const T delta_z = (z1 - z0) / static_cast<T>(z_size);
+
+            auto full_size = x_size * y_size * z_size;
+
+            #pragma omp parallel for collapse(3) if (full_size > this->omp_threshold)
+            for (size_t k = 0; k < z_size; ++k)
+            {
+            for (size_t i = 0; i < x_size; ++i)
+            {
+                for (size_t j = 0; j < y_size; ++j)
+                {
+                    const T x = x0 + i * delta_x;
+                    const T y = y0 + j * delta_y;
+                    const T z = z0 + k * delta_z;
+
+                    this->setValue(i, j, k, Vector3D<T>{
+                                       Px(x, y, z),
+                                       Py(x, y, z),
+                                       Pz(x, y, z),
+                                   });
+                }
+            }
+            }
+        }
+
+
         explicit VectorField3D(const ScalarField3D<T>& field)
             : AbstractField3D<Vector3D<T>>(field.getGridSizeX(), field.getGridSizeY(), field.getGridSizeZ())
         {
@@ -100,7 +142,9 @@ namespace vfFields
         }
 
         void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
-                                   const T rbf_epsilon = static_cast<T>(0.8))
+                                   const T rbf_epsilon = static_cast<T>(0.8),
+                                   const DistanceFunction distance_function = DistanceFunction::Euclidean,
+                                   const T power = 2)
         {
             auto row_size = this->x_size;
             auto column_size = this->y_size;
@@ -136,9 +180,9 @@ namespace vfFields
                 throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
             }
 
-            RBFInterpolator3D<T> xInterpolator(xValues, rbf_epsilon);
-            RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon);
-            RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon);
+            RBFInterpolator3D<T> xInterpolator(xValues, rbf_epsilon, distance_function, power);
+            RBFInterpolator3D<T> yInterpolator(yValues, rbf_epsilon, distance_function, power);
+            RBFInterpolator3D<T> zInterpolator(zValues, rbf_epsilon, distance_function, power);
 
             #pragma omp parallel for collapse(3) if (row_size * column_size * matrix_depth > this->omp_threshold)
             for (size_t k = 0; k < matrix_depth; ++k)

@@ -16,6 +16,8 @@ set(FAST_VECTOR_SOURCES
 add_executable(FastVectorFields
         tests/MainTest.cpp
         ${FAST_VECTOR_SOURCES}
+        Interpolation/InterpolationParameters.h
+        #tests/WindVectorFieldTest.cpp
 )
 
 target_include_directories(FastVectorFields PRIVATE
