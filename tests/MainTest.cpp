@@ -40,23 +40,23 @@ void serializeToJson(const T& object, const std::string& filename, const std::st
 
 int main()
 {
-    ScalarField2D<double> scalar_field(64, 64);
+    // ScalarField2D<double> scalar_field(64, 64);
+    //
+    // scalar_field.fill([](const double x, const double y)
+    // {
+    //     const double r = std::sqrt(x * x + y * y);
+    //     const double theta = std::atan2(y, x);
+    //     return std::sin(8 * M_PI * r + 4 * theta);
+    // }, -1.0, 1.0, -1.0, 1.0);
+    //
+    // VectorField2D vector_field(scalar_field);
+    // vector_field.normalize();
+    //
+    // serializeToJson(scalar_field, "scalar_field", "scalar_field");
+    //
+    // serializeToJson(vector_field, "vector_field", "vector_field");
 
-    scalar_field.fill([](const double x, const double y)
-    {
-        const double r = std::sqrt(x * x + y * y);
-        const double theta = std::atan2(y, x);
-        return std::sin(8 * M_PI * r + 4 * theta);
-    }, -1.0, 1.0, -1.0, 1.0);
-
-    VectorField2D vector_field(scalar_field);
-    vector_field.normalize();
-
-    serializeToJson(scalar_field, "scalar_field", "scalar_field");
-
-    serializeToJson(vector_field, "vector_field", "vector_field");
-
-    int N = 128;
+    int N = 32;
     VectorField2D<double> interpolation_target(N, N);
 
 
@@ -71,7 +71,7 @@ int main()
 
     try
     {
-        interpolation_target.fillWithInterpolation();
+        interpolation_target.fillWithInterpolation(1E-6, 0.8, DistanceFunction::Manhattan, 3);
         interpolation_target.normalize();
 
     }
@@ -111,10 +111,12 @@ int main()
 
     serializeToJson(vector_field_3d, "vector_field_3d_poles", "vector_field");
     vector_field_3d.normalize();
-    vector_field_3d.fillWithInterpolation();
+    vector_field_3d.fillWithInterpolation(1E-6, 0.8, DistanceFunction::Chebyshev);
     vector_field_3d.normalize();
 
     serializeToJson(vector_field_3d, "vector_field_3d_interpolation", "vector_field");
+
+
 
 
 

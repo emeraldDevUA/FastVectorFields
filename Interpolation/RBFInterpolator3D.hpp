@@ -8,6 +8,7 @@
 
 #include "Solvers.hpp"
 #include "../Vectors/Vector4D.hpp"
+#include "InterpolationParameters.h"
 
 #include <cmath>
 #include <vector>
@@ -22,8 +23,8 @@ namespace vfInterpolation
 
         RBFInterpolator3D(
             const std::vector<Vec4>& samples,
-            T epsilon)
-            : pts(samples), eps(epsilon)
+            T epsilon, const DistanceFunction distance_function = DistanceFunction::Euclidean, T power = 2)
+            : pts(samples), dst_function(distance_function), eps(epsilon), pwr(power)
         {
             computeWeights();
         }
@@ -56,8 +57,10 @@ namespace vfInterpolation
 
         std::vector<Vec4> pts;
         std::vector<T> weights;
+        DistanceFunction dst_function;
 
         T eps;
+        T pwr;
 
         // Inverse multiquadric RBF
         T phi(T r) const
@@ -65,14 +68,35 @@ namespace vfInterpolation
             return T(1) / std::sqrt(r * r + eps * eps);
         }
 
-        static T distance3D(
+
+        T distance3D(
             T x1, T y1, T z1,
-            T x2, T y2, T z2)
+            T x2, T y2, T z2
+        ) const
         {
-            T dx = x1 - x2;
-            T dy = y1 - y2;
-            T dz = z1 - z2;
-            return std::sqrt(dx * dx + dy * dy + dz * dz);
+            T dx = std::abs(x1 - x2);
+            T dy = std::abs(y1 - y2);
+            T dz = std::abs(z1 - z2);
+
+            switch (dst_function)
+            {
+            case DistanceFunction::Euclidean:
+                return std::sqrt(dx * dx + dy * dy + dz * dz);
+
+            case DistanceFunction::EuclideanSquared:
+                return dx * dx + dy * dy + dz * dz;
+
+            case DistanceFunction::Manhattan:
+                return dx + dy + dz;
+
+            case DistanceFunction::Chebyshev:
+                return std::max({dx, dy, dz});
+
+            case DistanceFunction::Minkowski:
+                return std::pow(std::pow(dx, pwr) + std::pow(dy, pwr)  + std::pow(dz, pwr), T(1) / pwr);
+            }
+
+            return 0;
         }
 
         void computeWeights()

@@ -11,6 +11,7 @@
 
 
 using vfMath::Vector3D;
+using vfInterpolation::DistanceFunction;
 using vfInterpolation::RBFInterpolator2D;
 
 namespace vfFields
@@ -97,7 +98,9 @@ namespace vfFields
 
 
         void fillWithInterpolation(const T empty_point_threshold = static_cast<T>(1e-6),
-                                   const T rbf_epsilon = static_cast<T>(0.8))
+                                   const T rbf_epsilon = static_cast<T>(0.8),
+                                   const DistanceFunction distance_function = DistanceFunction::Euclidean,
+                                   const T power = 2)
         {
             auto row_size = this->x_size;
             auto column_size = this->y_size;
@@ -125,8 +128,8 @@ namespace vfFields
                 throw std::logic_error("RBF interpolation does not work with less then 3 non-empty points.");
             }
 
-            RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon);
-            RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon);
+            RBFInterpolator2D<T> xInterpolator(xValues, rbf_epsilon, distance_function, power);
+            RBFInterpolator2D<T> yInterpolator(yValues, rbf_epsilon, distance_function, power);
 
             #pragma omp parallel for collapse(2) if (row_size * column_size > this->omp_threshold)
             for (size_t i = 0; i < row_size; ++i)
