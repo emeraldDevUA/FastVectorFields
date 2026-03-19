@@ -8,6 +8,7 @@
 
 #include "Solvers.hpp"
 #include "../Vectors/Vector4D.hpp"
+#include "InterpolationParameters.h"
 
 #include <cmath>
 #include <vector>

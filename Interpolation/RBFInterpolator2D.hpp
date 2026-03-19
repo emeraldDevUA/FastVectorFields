@@ -21,8 +21,10 @@ namespace vfInterpolation
     public:
         using Vec3 = vfMath::Vector3D<T>;
 
-        RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon, const DistanceFunction distance_function = DistanceFunction::Euclidean, T power = 2)
-            : pts(points), dst_function(distance_function), eps(epsilon), pwr(power)
+        RBFInterpolator2D(const std::vector<Vec3>& points, const T& epsilon,
+            const DistanceFunction distance_function = DistanceFunction::Euclidean,
+            T power = 2, const RBFKernel kernel = RBFKernel::InverseMultiquadric)
+            : pts(points), dst_function(distance_function), rbf_kernel(kernel), eps(epsilon), pwr(power)
         {
             computeWeights();
         }
@@ -52,6 +54,7 @@ namespace vfInterpolation
         std::vector<Vec3> pts;
         std::vector<T> weights;
         DistanceFunction dst_function;
+        RBFKernel rbf_kernel;
 
         T eps;
         T pwr;

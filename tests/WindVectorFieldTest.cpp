@@ -52,7 +52,7 @@ int main()
 
 
     VectorField3D<double> vector_field_3d(
-        32, 32, 16,
+        32, 32, 32,
         Px, Py, Pz,
         -5.0, 5.0,
         -5.0, 5.0,

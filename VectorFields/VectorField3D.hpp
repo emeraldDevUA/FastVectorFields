@@ -13,6 +13,7 @@
 
 using vfMath::Vector3D;
 using vfMath::Vector4D;
+using vfInterpolation::DistanceFunction;
 using vfInterpolation::RBFInterpolator3D;
 
 namespace vfFields
